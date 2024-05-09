@@ -84,6 +84,144 @@ Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return token;
 }
 
+Token RBTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = RED_BLACK_TREE;
+	return RED_BLACK_TREE;
+}
+
+Token BSTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = BINARY_SEARCH_TREE;
+	return BINARY_SEARCH_TREE;
+}
+
+Token EXPTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = EXPRESSION_TREE;
+	return EXPRESSION_TREE;
+}
+
+Token AVLTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = AVL_TREE;
+	return AVL_TREE;
+}
+
+Token NotEqualComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = NOT_EQUAL;
+	return NOT_EQUAL;
+}
+
+Token EqualComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = EQUAL;
+	return EQUAL;
+}
+
+Token LessEqualComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = LESS_EQUAL;
+	return LESS_EQUAL;
+}
+
+Token LessComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = LESS;
+	return LESS;
+}
+
+Token GreaterEqualComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = GREATER_EQUAL;
+	return GREATER_EQUAL;
+}
+
+Token GreaterComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = GREATER;
+	return GREATER;
+}
+
+Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	Token token;
+	switch (lexicalAnalyzerContext->lexeme[0]) {
+		case ',': token = COMMA; break;
+		case ';': token = SEMI_COLON; break;
+		case '=': token = ASSIGN; break;
+	}
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}
+
+Token LoopLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = FOR;
+	return FOR;
+}
+
+Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = IN_ORDER;
+	return IN_ORDER;
+}
+
+Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = POST_ORDER;
+	return POST_ORDER;
+}
+
+Token PreOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = PRE_ORDER;
+	return PRE_ORDER;
+}
+
+Token IntTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = INT_TYPE;
+	return INT_TYPE;
+}
+
+Token ConstantTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = CONSTANT_TYPE;
+	return CONSTANT_TYPE;
+}
+
+Token BooleanTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = BOOLEAN_TYPE;
+	return BOOLEAN_TYPE;
+}
+
+Token HeightLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = HEIGHT;
+	return HEIGHT;
+}
+
+Token IncludesLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = INCLUDES;
+	return INCLUDES;
+}
+
+Token InsertLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = INSERT;
+	return INSERT;
+}
+
+Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = REMOVE;
+	return REMOVE;
+}
+
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return UNKNOWN;
