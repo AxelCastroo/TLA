@@ -61,8 +61,10 @@
 
 %token <token> COMMA
 %token <token> ASSIGN
+%token <token> NOT
 
 %token <token> FOR
+%token <token> IN
 %token <token> TO
 %token <token> IF
 
@@ -82,6 +84,7 @@
 %token <token> CALCULATE
 %token <token> VISUALIZE
 %token <token> ITERATE
+%token <token> DEPTH
 
 %token <token> DECLARATION
 

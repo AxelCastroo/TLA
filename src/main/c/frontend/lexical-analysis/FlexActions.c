@@ -163,15 +163,22 @@ Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	switch (lexicalAnalyzerContext->lexeme[0]) {
 		case ',': token = COMMA; break;
 		case '=': token = ASSIGN; break;
+		case '!': token = NOT; break;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return token;
 }
 
-Token LoopLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token ForLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = FOR;
 	return FOR;
+}
+
+Token InLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = IN;
+	return IN;
 }
 
 Token ToLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
@@ -228,18 +235,6 @@ Token BooleanTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return BOOLEAN_TYPE;
 }
 
-Token HeightLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = HEIGHT;
-	return HEIGHT;
-}
-
-Token IncludesLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = INCLUDES;
-	return INCLUDES;
-}
-
 Token InsertLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = INSERT;
@@ -250,6 +245,24 @@ Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = REMOVE;
 	return REMOVE;
+}
+
+Token IncludesLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = INCLUDES;
+	return INCLUDES;
+}
+
+Token HeightLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = HEIGHT;
+	return HEIGHT;
+}
+
+Token DepthLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = DEPTH;
+	return DEPTH;
 }
 
 Token CalculateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
@@ -269,6 +282,7 @@ Token IterateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	lexicalAnalyzerContext->semanticValue->token = ITERATE;
 	return ITERATE;
 }
+
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);

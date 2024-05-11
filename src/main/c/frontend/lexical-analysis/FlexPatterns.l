@@ -54,10 +54,12 @@
 ">="                                { return GreaterEqualComparisonLexemeAction(createLexicalAnalyzerContext()); }
 ">"                                 { return GreaterComparisonLexemeAction(createLexicalAnalyzerContext()); }
 
+"!"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 ","                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "="                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 
-"for"                               { return LoopLexemeAction(createLexicalAnalyzerContext()); }
+"for"                               { return ForLexemeAction(createLexicalAnalyzerContext()); }
+"in"                                { return InLexemeAction(createLexicalAnalyzerContext()); }
 "to"                                { return ToLexemeAction(createLexicalAnalyzerContext()); }
 "if"                                { return IfLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -70,10 +72,11 @@
 "Constant"                          { return ConstantTypeLexemeAction(createLexicalAnalyzerContext()); }
 "Boolean"                           { return BooleanTypeLexemeAction(createLexicalAnalyzerContext()); }
 
-"height"                            { return HeightLexemeAction(createLexicalAnalyzerContext()); }
-"includes"                          { return IncludesLexemeAction(createLexicalAnalyzerContext()); }
 "insert"                            { return InsertLexemeAction(createLexicalAnalyzerContext()); }
 "remove"                            { return RemoveLexemeAction(createLexicalAnalyzerContext()); }
+"includes"                          { return IncludesLexemeAction(createLexicalAnalyzerContext()); }
+"height"                            { return HeightLexemeAction(createLexicalAnalyzerContext()); }
+"depth"                             { return DepthLexemeAction(createLexicalAnalyzerContext()); }
 "calculate"                         { return CalculateLexemeAction(createLexicalAnalyzerContext()); }
 "visualize"                         { return VisualizeLexemeAction(createLexicalAnalyzerContext()); }
 "iterate"                           { return IterateLexemeAction(createLexicalAnalyzerContext()); }
@@ -91,8 +94,7 @@
 
 \"[0-9 ]+\"						    { return StringLexemeAction(createLexicalAnalyzerContext()); }
 
-
-for(1 To 10){
+for n in (1 to 10){
 
 }
 
