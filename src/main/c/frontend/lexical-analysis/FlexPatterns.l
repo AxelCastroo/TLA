@@ -39,6 +39,9 @@
 "("									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext()); }
 ")"									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext()); }
 
+"{"                                 { return BracketLexemeAction(createLexicalAnalyzerContext()); }
+"}"                                 { return BracketLexemeAction(createLexicalAnalyzerContext()); }
+
 "RBTree"                            { return RBTreeLexemeAction(createLexicalAnalyzerContext()); }
 "BSTree"                            { return BSTreeLexemeAction(createLexicalAnalyzerContext()); }
 "EXPTree"                           { return EXPTreeLexemeAction(createLexicalAnalyzerContext()); }
@@ -52,7 +55,6 @@
 ">"                                 { return GreaterComparisonLexemeAction(createLexicalAnalyzerContext()); }
 
 ","                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
-";"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "="                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 
 "For"                               { return LoopLexemeAction(createLexicalAnalyzerContext()); }
@@ -62,6 +64,7 @@
 "pre-order"                         { return PreOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
 
 "Int"                               { return IntTypeLexemeAction(createLexicalAnalyzerContext()); }
+"String"                            { return StringTypeLexemeAction(createLexicalAnalyzerContext()); }
 "Constant"                          { return ConstantTypeLexemeAction(createLexicalAnalyzerContext()); }
 "Boolean"                           { return BooleanTypeLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -69,12 +72,27 @@
 "includes"                          { return IncludesLexemeAction(createLexicalAnalyzerContext()); }
 "insert"                            { return InsertLexemeAction(createLexicalAnalyzerContext()); }
 "remove"                            { return RemoveLexemeAction(createLexicalAnalyzerContext()); }
+"visualize"                         { return VisualizeLexemeAction(createLexicalAnalyzerContext()); }
+"iterate"                           { return IterateLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
-
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
 
 %%
 
 #include "FlexExport.h"
+
+/* BSTree tree
+
+tree insert 4
+
+for(1 to 10){
+
+}
+
+int count = 0;
+iterate(tree in-order){
+ 
+}
+*/

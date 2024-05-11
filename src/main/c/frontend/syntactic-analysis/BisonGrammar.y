@@ -43,6 +43,9 @@
 %token <token> OPEN_PARENTHESIS
 %token <token> SUB
 
+%token <token> OPEN_BRACKET
+%token <token> CLOSE_BRACKET
+
 %token <token> RED_BLACK_TREE
 %token <token> BINARY_SEARCH_TREE
 %token <token> EXPRESSION_TREE
@@ -56,7 +59,6 @@
 %token <token> GREATER
 
 %token <token> COMMA
-%token <token> SEMI_COLON
 %token <token> ASSIGN
 
 %token <token> FOR
@@ -66,6 +68,7 @@
 %token <token> PRE_ORDER
 
 %token <token> INT_TYPE
+%token <token> STRING_TYPE
 %token <token> CONSTANT_TYPE
 %token <token> BOOLEAN_TYPE
 
@@ -73,6 +76,8 @@
 %token <token> INCLUDES
 %token <token> INSERT
 %token <token> REMOVE
+%token <token> VISUALIZE
+%token <token> ITERATE
 
 %token <token> UNKNOWN
 

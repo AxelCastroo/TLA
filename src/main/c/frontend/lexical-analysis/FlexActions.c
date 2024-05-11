@@ -84,6 +84,17 @@ Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return token;
 }
 
+Token BracketLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	Token token;
+	switch (lexicalAnalyzerContext->lexeme[0]) {
+		case '{': token = OPEN_BRACKET; break;
+		case '}': token = CLOSE_BRACKET; break;
+	}
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}
+
 Token RBTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = RED_BLACK_TREE;
@@ -149,7 +160,6 @@ Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	Token token;
 	switch (lexicalAnalyzerContext->lexeme[0]) {
 		case ',': token = COMMA; break;
-		case ';': token = SEMI_COLON; break;
 		case '=': token = ASSIGN; break;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
@@ -181,6 +191,12 @@ Token PreOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyze
 }
 
 Token IntTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = INT_TYPE;
+	return INT_TYPE;
+}
+
+Token StringTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = INT_TYPE;
 	return INT_TYPE;
@@ -220,6 +236,18 @@ Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = REMOVE;
 	return REMOVE;
+}
+
+Token VisualizeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = VISUALIZE;
+	return VISUALIZE;
+}
+
+Token IterateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = ITERATE;
+	return ITERATE;
 }
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {

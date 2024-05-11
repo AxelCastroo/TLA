@@ -29,6 +29,8 @@ Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerCon
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
+Token BracketLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 Token RBTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token BSTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token EXPTreeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
@@ -50,6 +52,7 @@ Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyz
 Token PreOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token IntTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token StringTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ConstantTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token BooleanTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
@@ -57,6 +60,8 @@ Token HeightLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IncludesLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token InsertLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token VisualizeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token IterateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
