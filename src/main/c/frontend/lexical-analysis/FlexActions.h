@@ -46,6 +46,8 @@ Token GreaterComparisonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerCont
 Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token LoopLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token ToLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token IfLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
@@ -60,8 +62,11 @@ Token HeightLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IncludesLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token InsertLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token CalculateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token VisualizeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IterateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+Token DeclarationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 

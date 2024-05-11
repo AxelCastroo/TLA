@@ -73,6 +73,8 @@ Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return INTEGER;
 }
 
+
+
 Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	Token token;
@@ -172,6 +174,18 @@ Token LoopLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return FOR;
 }
 
+Token ToLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = TO;
+	return TO;
+}
+
+Token IfLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = IF;
+	return IF;
+}
+
 Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = IN_ORDER;
@@ -238,6 +252,12 @@ Token RemoveLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return REMOVE;
 }
 
+Token CalculateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = CALCULATE;
+	return CALCULATE;
+}
+
 Token VisualizeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = VISUALIZE;
@@ -253,4 +273,12 @@ Token IterateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return UNKNOWN;
+}
+
+Token DeclarationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+    char * varName = (char*) malloc(lexicalAnalyzerContext->length + 1);
+    strncpy(varName, lexicalAnalyzerContext->lexeme, lexicalAnalyzerContext->length);
+    varName[lexicalAnalyzerContext->length-1] = '\0';
+	lexicalAnalyzerContext->semanticValue->varname = varName;
+    return DECLARATION;
 }

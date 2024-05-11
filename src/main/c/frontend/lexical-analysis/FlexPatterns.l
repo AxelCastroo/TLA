@@ -57,7 +57,9 @@
 ","                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "="                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 
-"For"                               { return LoopLexemeAction(createLexicalAnalyzerContext()); }
+"for"                               { return LoopLexemeAction(createLexicalAnalyzerContext()); }
+"to"                                { return ToLexemeAction(createLexicalAnalyzerContext()); }
+"if"                                { return IfLexemeAction(createLexicalAnalyzerContext()); }
 
 "in-order"                          { return InOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
 "post-order"                        { return PostOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
@@ -72,10 +74,12 @@
 "includes"                          { return IncludesLexemeAction(createLexicalAnalyzerContext()); }
 "insert"                            { return InsertLexemeAction(createLexicalAnalyzerContext()); }
 "remove"                            { return RemoveLexemeAction(createLexicalAnalyzerContext()); }
+"calculate"                         { return CalculateLexemeAction(createLexicalAnalyzerContext()); }
 "visualize"                         { return VisualizeLexemeAction(createLexicalAnalyzerContext()); }
 "iterate"                           { return IterateLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
+[A-Za-z][A-Za-z0-9]*                { return DeclarationLexemeAction(createLexicalAnalyzerContext()); }
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
 
@@ -85,13 +89,14 @@
 
 /* BSTree tree
 
-tree insert 4
+\"[0-9 ]+\"						    { return StringLexemeAction(createLexicalAnalyzerContext()); }
 
-for(1 to 10){
+
+for(1 To 10){
 
 }
 
-int count = 0;
+Int count = 0;
 iterate(tree in-order){
  
 }

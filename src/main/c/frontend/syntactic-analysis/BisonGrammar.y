@@ -11,6 +11,7 @@
 
 	int integer;
 	Token token;
+	char * varname;
 
 	/** Non-terminals. */
 
@@ -62,6 +63,8 @@
 %token <token> ASSIGN
 
 %token <token> FOR
+%token <token> TO
+%token <token> IF
 
 %token <token> IN_ORDER
 %token <token> POST_ORDER
@@ -76,8 +79,11 @@
 %token <token> INCLUDES
 %token <token> INSERT
 %token <token> REMOVE
+%token <token> CALCULATE
 %token <token> VISUALIZE
 %token <token> ITERATE
+
+%token <token> DECLARATION
 
 %token <token> UNKNOWN
 
