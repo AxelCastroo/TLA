@@ -7,6 +7,7 @@
 #include "AbstractSyntaxTree.h"
 #include "SyntacticAnalyzer.h"
 #include <stdlib.h>
+#include <assert.h>
 
 /** Initialize module's internal state. */
 void initializeBisonActionsModule();

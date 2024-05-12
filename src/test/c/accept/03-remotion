@@ -1,0 +1,17 @@
+BSTree tree
+tree insert 44
+tree insert 343
+tree remove 44
+tree remove 343
+
+RBTree tree2
+tree2 insert 34
+tree2 insert 909
+tree2 remove 34
+tree2 remove 909
+
+AVLTree tree3
+tree3 insert 912
+tree3 insert 18
+tree3 remove 912
+tree3 remove 18

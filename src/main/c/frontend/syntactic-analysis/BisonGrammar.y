@@ -29,7 +29,7 @@
 	FunctionCall * function_call;
 	Assignment * assignment;
 	Block * block;
-	IterateStatement iterator_statement;
+	IterateStatement * iterator_statement;
 }
 
 /**

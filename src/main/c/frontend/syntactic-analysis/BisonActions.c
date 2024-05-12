@@ -104,6 +104,7 @@ Statement * StatementSemanticAction(void *statement, StatementType type) {
         case ASSIGNMENT_STATEMENT: new->assignment = statement; break;
         case DECLARATION_STATEMENT: new->declaration = statement; break;
         case FUNCTION_CALL_STATEMENT: new->functionCall = statement; break;
+		case ITERATE_STATEMENT: new->iterateStatement = statement; break;
         default: assert(0 && "Illegal State"); break;
     }
 

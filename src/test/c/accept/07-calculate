@@ -1,0 +1,8 @@
+EXPTree tree 1 + (44 / 43) * 2
+tree calculate
+
+EXPTree tree2 1 
+tree2 calculate
+
+EXPTree tree3 1 - 822828
+tree3 calculate

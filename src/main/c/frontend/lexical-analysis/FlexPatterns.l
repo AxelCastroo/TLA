@@ -72,7 +72,6 @@
 "pre-order"                         { return PreOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
 
 "Int"                               { return IntTypeLexemeAction(createLexicalAnalyzerContext()); }
-"String"                            { return StringTypeLexemeAction(createLexicalAnalyzerContext()); }
 "Constant"                          { return ConstantTypeLexemeAction(createLexicalAnalyzerContext()); }
 "Boolean"                           { return BooleanTypeLexemeAction(createLexicalAnalyzerContext()); }
 

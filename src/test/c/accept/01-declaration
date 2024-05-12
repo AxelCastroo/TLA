@@ -1,0 +1,6 @@
+BSTree tree1
+AVLTree tree2
+EXPTree tree3 2 + (3 / 3)
+Constant N = 5
+Boolean test1
+test1 = tree1 includes 33
