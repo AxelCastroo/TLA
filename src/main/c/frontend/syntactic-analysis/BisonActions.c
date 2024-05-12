@@ -71,10 +71,10 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	return factor;
 }
 
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression) {
+Program * ProgramSemanticAction(CompilerState * compilerState, StatementList statementList) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
-	program->statements = expression;
+	program->statements = statementList;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
 		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
@@ -85,3 +85,95 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 	}
 	return program;
 }
+
+StatementList StatementListSemanticAction(Statement *statement, StatementList next) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+    StatementList new = malloc(sizeof(struct StatementNode));
+    new->statement = statement;
+    new->next = next;
+    return new;
+}
+
+Statement * StatementSemanticAction(void *statement, StatementType type) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Statement * new = calloc(1, sizeof(Statement));
+	new->type = type;
+    switch (type) {
+        case IF_STATEMENT: new->ifStatement = statement; break;
+        case FOR_STATEMENT: new->forStatement = statement; break;
+        case ASSIGNMENT_STATEMENT: new->assignment = statement; break;
+        case DECLARATION_STATEMENT: new->declaration = statement; break;
+        case FUNCTION_CALL_STATEMENT: new->functionCall = statement; break;
+        default: assert(0 && "Illegal State"); break;
+    }
+
+    return new;
+}
+
+IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block *else_block) {
+    IfStatementType type = IF_ELSE_TYPE;
+    if (else_block == NULL) {
+        type = IF_TYPE;
+    }
+    IfStatement * new = malloc(sizeof(IfStatement));
+    new->type = type;
+    new->condition = cond;
+    new->blockIf = if_block;
+    new->blockElse = else_block;
+    return new;
+}
+
+ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, Block *block) {
+	ForStatement * new = malloc(sizeof(ForStatement));
+	new->varName = varName;
+	new->range = range;
+	new->block = block;
+	return new;
+}
+
+RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *end) {
+	RangeExpression * new = malloc(sizeof(RangeExpression));
+	new->expressionRight = start;
+	new->expressionLeft = end;
+	return new;
+}
+
+Block *BlockSemanticAction(StatementList statementList) {
+	Block * new = malloc(sizeof(Block));
+	new->statements = statementList;
+	return new;
+}
+
+Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall) {
+	Assignment * new = malloc(sizeof(Assignment));
+	new->varName = varName;
+	new->expression = expression;
+	new->functionCall = functionCall;
+	return new;
+}
+
+Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType) {
+	Declaration * new = malloc(sizeof(Declaration));
+	new->varName = varName;
+	new->assignment = NULL;
+	return new;
+}
+
+FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type) {
+	FunctionCall * new = malloc(sizeof(FunctionCall));
+    new->type = type;
+    new->varName = varName;
+    new->expression = expression;
+    new->declaration = NULL;
+    return new;
+}
+
+IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block) {
+	IterateStatement * new = malloc(sizeof(IterateStatement));
+	new->varName = varName;
+	new->type = type;
+	new->block = block;
+	return new;
+}
+
+

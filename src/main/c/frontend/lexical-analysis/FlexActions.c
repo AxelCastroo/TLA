@@ -226,12 +226,6 @@ Token IntTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return INT_TYPE;
 }
 
-Token StringTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = INT_TYPE;
-	return INT_TYPE;
-}
-
 Token ConstantTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = CONSTANT_TYPE;

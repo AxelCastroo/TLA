@@ -125,6 +125,7 @@ typedef enum {
 	EXP_DECLARATION,
 	INT_DECLARATION,
     BOOL_DECLARATION,
+	CONST_DECLARATION,
 } DeclarationType;
 
 typedef struct {
@@ -133,13 +134,24 @@ typedef struct {
     struct Assignment * assignment;
 } Declaration;
 
+typedef enum{
+	INORDER,
+	PREORDER,
+	POSTORDER
+}IteratorType;
+
+typedef struct {
+	char * varName;
+	IteratorType type;
+	Block * block;
+} IterateStatement;
+
 typedef enum {
 	INSERT_CALL,
 	REMOVE_CALL,
 	INCLUDES_CALL,
 	HEIGHT_CALL,
 	DEPTH_CALL,
-	ITERATE_CALL,
 	CALCULATE_CALL,
 	VISUALIZE_CALL,
 	ADD_CALL,
@@ -167,6 +179,7 @@ typedef enum {
 	FUNCTION_CALL_STATEMENT,
 	DECLARATION_STATEMENT,
 	ASSIGNMENT_STATEMENT,
+	ITERATE_STATEMENT
 } StatementType;
 
 typedef struct {
@@ -176,6 +189,7 @@ typedef struct {
 		FunctionCall * functionCall;
 		Declaration * declaration;
 		Assignment * assignment;
+		IterateStatement * iterateStatement;
 	};
 	StatementType type;
 } Statement;
@@ -193,31 +207,18 @@ struct Program {
  * Node recursive destructors.
  */
 void releaseProgram(Program * program);
-
 void releaseStatementList(StatementList statementList);
-
 void releaseStatement(Statement * statement);
-
 void releaseAssignment(Assignment * assignment);
-
 void releaseFunctionCall(FunctionCall * functionCall);
-
 void releaseDeclaration(Declaration * declaration);
-
 void releaseForStatement(ForStatement * forStatement);
-
 void releaseRangeExpression(RangeExpression * rangeExpression);
-
 void releaseIfStatement(IfStatement * ifStatement);
-
 void releaseBlock(Block * block);
-
 void releaseExpression(Expression * expression);
-
 void releaseFactor(Factor * factor);
-
 void releaseConstant(Constant *constant);
-
 void releaseVariable(char * variable);
 
 #endif

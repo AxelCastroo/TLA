@@ -19,6 +19,17 @@
 	Expression * expression;
 	Factor * factor;
 	Program * program;
+	
+	StatementList statement_list;
+	Statement * statement;
+	ForStatement * for_statement;
+	IfStatement * if_statement;
+	RangeExpression * range_expression;
+	Declaration * declaration;
+	FunctionCall * function_call;
+	Assignment * assignment;
+	Block * block;
+	IterateStatement iterator_statement;
 }
 
 /**
@@ -79,7 +90,6 @@
 %token <token> PRE_ORDER
 
 %token <token> INT_TYPE
-%token <token> STRING_TYPE
 %token <token> CONSTANT_TYPE
 %token <token> BOOLEAN_TYPE
 
@@ -92,7 +102,7 @@
 %token <token> VISUALIZE
 %token <token> ITERATE
 
-%token <token> DECLARATION
+%token <varname> DECLARATION
 
 %token <token> UNKNOWN
 
@@ -101,6 +111,17 @@
 %type <expression> expression
 %type <factor> factor
 %type <program> program
+
+%type <statement_list> statement_list
+%type <statement> statement
+%type <for_statement> for_statement
+%type <if_statement> if_statement
+%type <range_expression> range_expression
+%type <declaration> declaration
+%type <function_call> function_call
+%type <assignment> assignment
+%type <block> block
+%type <iterator_statement> iterator_statement
 
 /**
  * Precedence and associativity.
@@ -117,7 +138,65 @@
 
 %%
 
-program: expression								{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+program: statement_list												{ $$ = ProgramSemanticAction(currentCompilerState(), $1); }
+	;
+
+statement_list: statement statement_list							{ $$ = StatementListSemanticAction($1, $2); }
+	| statement														{ $$ = StatementListSemanticAction($1, NULL); }									
+	;
+
+statement: if_statement												{ $$ = StatementSemanticAction($1, IF_STATEMENT); }
+	| for_statement													{ $$ = StatementSemanticAction($1, FOR_STATEMENT); }
+	| declaration													{ $$ = StatementSemanticAction($1, DECLARATION_STATEMENT); }
+	| assignment													{ $$ = StatementSemanticAction($1, ASSIGNMENT_STATEMENT); }
+	| function_call													{ $$ = StatementSemanticAction($1, FUNCTION_CALL_STATEMENT); }
+	| iterator_statement 											{ $$ = StatementSemanticAction($1, ITERATE_STATEMENT); }
+	;
+
+block: OPEN_BRACKET statement_list[stat] CLOSE_BRACKET 				{ $$ = BlockSemanticAction($stat); }
+	;
+
+if_statement: IF OPEN_PARENTHESIS expression[exp] CLOSE_PARENTHESIS block[if] ELSE block[else]		{ $$ = IfStatementSemanticAction($exp, $if, $else); }
+	| IF OPEN_PARENTHESIS expression[exp] CLOSE_PARENTHESIS block[bl]							{ $$ = IfStatementSemanticAction($exp, $bl, NULL); }
+	;
+
+for_statement: FOR DECLARATION[dec] IN range_expression[range] block[bl]							{ $$ = ForStatementSemanticAction($dec, $range, $bl); }
+	;
+
+range_expression: OPEN_PARENTHESIS expression[left] TO expression[right] CLOSE_PARENTHESIS			{ $$ = RangeExpressionSemanticAction($left, $right); }
+	;
+
+function_call: DECLARATION[dec] INSERT expression[exp]				{ $$ = FunctionCallSemanticAction($dec, $exp, INSERT_CALL); }
+	| DECLARATION[dec] REMOVE expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, REMOVE_CALL); }
+	| DECLARATION[dec] INCLUDES expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, INCLUDES_CALL); }
+	| DECLARATION[dec] HEIGHT 										{ $$ = FunctionCallSemanticAction($dec, NULL, HEIGHT_CALL); }
+	| DECLARATION[dec] DEPTH expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, DEPTH_CALL); }
+	| DECLARATION[dec] CALCULATE									{ $$ = FunctionCallSemanticAction($dec, NULL, CALCULATE_CALL); }	
+	| DECLARATION[dec] VISUALIZE									{ $$ = FunctionCallSemanticAction($dec, NULL,VISUALIZE_CALL); }
+	| DECLARATION[dec] ADD DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, ADD_CALL); }
+	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL,SUB_CALL); }
+	;
+
+iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CLOSE_PARENTHESIS block[bl]			{ $$ = IterateSemanticAction($dec, $order, $bl); }
+	| ITERATE OPEN_PARENTHESIS DECLARATION[dec] POST_ORDER[order] CLOSE_PARENTHESIS block[bl]						{ $$ = IterateSemanticAction($dec, $order, $bl); }
+	| ITERATE OPEN_PARENTHESIS DECLARATION[dec] PRE_ORDER[order] CLOSE_PARENTHESIS block[bl]						{ $$ = IterateSemanticAction($dec, $order, $bl); }
+	;
+
+declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticAction($dec, RBT_DECLARATION); }
+	| BINARY_SEARCH_TREE DECLARATION[dec]							{ $$ = DeclarationSemanticAction($dec, BST_DECLARATION); }
+	| EXPRESSION_TREE DECLARATION[dec] expression					{ $$ = DeclarationSemanticAction($dec, EXP_DECLARATION); }
+	| AVL_TREE DECLARATION[dec]										{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
+	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }		// Fixed Soon
+	| INT_TYPE DECLARATION[dec] ASSIGN expression					{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
+	| INT_TYPE DECLARATION[dec] ASSIGN function_call				{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
+	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
+	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN expression				{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
+	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN function_call			{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }			
+	| CONSTANT_TYPE DECLARATION[dec] ASSIGN expression				{ $$ = DeclarationSemanticAction($dec, CONST_DECLARATION); }
+	;
+	
+assignment: DECLARATION[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
+	| DECLARATION[dec] ASSIGN function_call[fun]					{ $$ = AssignmentSemanticAction($dec, NULL, $fun); }
 	;
 
 expression : expression[left] MOD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, MODULE_EXP); }
@@ -143,83 +222,3 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactor
 
 constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
 	;
-
-%%
-
-/* program: statement_list
-	;
-
-statement_list: statement statement_list
-	| statement
-	;
-
-statement: if_statement
-	| for_statement
-	| declaration_statement
-	| assignment_statement
-	| function_statement
-	| iterator_statement
-	;
-
-block: OPEN_BRACKET statement_list CLOSE_BRACKET 
-	;
-
-if_statement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block ELSE block
-	| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block
-	;
-
-for_statement: FOR CONSTANT_TYPE IN OPEN_PARENTHESIS INTEGER TO INTEGER CLOSE_PARENTHESIS block
-	;
-
-declaration_statement: RED_BLACK_TREE DECLARATION 
-	| BINARY_SEARCH_TREE DECLARATION
-	| EXPRESSION_TREE DECLARATION tree_expression
-	| AVL_TREE DECLARATION
-	| INT_TYPE DECLARATION 
-	| INT_TYPE DECLARATION ASSIGN tree_expression
-	| INT_TYPE DECLARATION ASSIGN function_statement
-	| BOOLEAN_TYPE DECLARATION
-	| BOOLEAN_TYPE DECLARATION ASSIGN expression
-	| BOOLEAN_TYPE DECLARATION ASSIGN function_statement			// TODO CONSTANT 
-	;
-
-assignment_statement: DECLARATION ASSIGN expression
-	| DECLARATION ASSIGN tree_expression
-	| DECLARATION ASSIGN function_statement
-	;
-
-function_statement: DECLARATION INSERT INTEGER;
-	| DECLARATION REMOVE INTEGER
-	| DECLARATION INCLUDES INTEGER
-	| DECLARATION HEIGHT 
-	| DECLARATION DEPTH INTEGER
-	| DECLARATION CALCULATE
-	| DECLARATION VISUALIZE
-	| DECLARATION + DECLARATION
-	| DECLARATION - DECLARATION
-	;
-
-iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION IN_ORDER CLOSE PARENTHESIS block
-	| ITERATE OPEN_PARENTHESIS DECLARATION POST_ORDER CLOSE PARENTHESIS block
-	| ITERATE OPEN_PARENTHESIS DECLARATION PRE_ORDER CLOSE PARENTHESIS block
-	;
-
-*/
-
-/* 
-
-BSTree bstree
-bstree insert 4
-Int number = 3
-bstree insert number
-Boolean result = bstree includes 3
-
-for n in (1 to 10){
-
-}
-
-Int count = 0;
-iterate(tree in-order){
- 
-}
-*/

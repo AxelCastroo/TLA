@@ -56,7 +56,6 @@ Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyz
 Token PreOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token IntTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token StringTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ConstantTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token BooleanTypeLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
