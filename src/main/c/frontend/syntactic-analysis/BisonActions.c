@@ -38,6 +38,21 @@ Constant * IntegerConstantSemanticAction(const int value) {
 	return constant;
 }
 
+Constant * BooleanConstantSemanticAction(const bool value) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Constant * constant = calloc(1, sizeof(Constant));
+	constant->boolValue = value;
+	return constant;
+}
+
+// Constant * ConstantSemanticAction(const int value, const bool value) {
+// 	_logSyntacticAnalyzerAction(__FUNCTION__);
+// 	Constant * constant = calloc(1, sizeof(Constant));
+// 	constant->intValue = value;
+// 	constant->boolValue = value;
+// 	return constant;
+// }
+
 Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));
@@ -68,6 +83,14 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->expression = expression;
 	factor->type = EXPRESSION_FACTOR;
+	return factor;
+}
+
+Factor * DeclarationFactorSemanticAction(char * varName) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Factor * factor = calloc(1, sizeof(Factor));
+	factor->varName = varName;
+	factor->type = DECLARATION_FACTOR;
 	return factor;
 }
 
@@ -145,15 +168,22 @@ Block *BlockSemanticAction(StatementList statementList) {
 	return new;
 }
 
-Assignment *AssignmentSemanticAction(Declaration *declaration, Expression *expression, FunctionCall *functionCall) {
+Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall) {
 	Assignment * new = malloc(sizeof(Assignment));
-	new->varName = declaration->varName;
+	new->varName = varName;
 	new->expression = expression;
 	new->functionCall = functionCall;
 	return new;
 }
 
 Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType) {
+	Declaration * new = malloc(sizeof(Declaration));
+	new->varName = varName;
+	new->assignment = NULL;
+	return new;
+}
+
+Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationType declarationType, Expression *expression, FunctionCall *functionCall) {
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
 	new->assignment = NULL;

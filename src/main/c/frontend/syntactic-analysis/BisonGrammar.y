@@ -12,6 +12,7 @@
 	int integer;
 	Token token;
 	char * varname;
+    bool boolean;
 
 	/** Non-terminals. */
 
@@ -103,6 +104,7 @@
 %token <token> ITERATE
 
 %token <varname> DECLARATION
+%token <boolean> BOOLEAN
 
 %token <token> UNKNOWN
 
@@ -186,16 +188,23 @@ iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CL
 	;
 
 declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticAction($dec, RBT_DECLARATION); }
+	| RED_BLACK_TREE DECLARATION[dec] ASSIGN function_call[fun]		{ $$ = DeclarationWithAssignmentSemanticAction($dec, RBT_DECLARATION, NULL, $fun); }	
 	| BINARY_SEARCH_TREE DECLARATION[dec]							{ $$ = DeclarationSemanticAction($dec, BST_DECLARATION); }
-	| EXPRESSION_TREE DECLARATION[dec] expression					{ $$ = DeclarationSemanticAction($dec, EXP_DECLARATION); }
+	| BINARY_SEARCH_TREE DECLARATION[dec] ASSIGN function_call[fun]	{ $$ = DeclarationWithAssignmentSemanticAction($dec, BST_DECLARATION, NULL, $fun); }	
+	| EXPRESSION_TREE DECLARATION[dec] expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, EXP_DECLARATION, $exp, NULL); }
 	| AVL_TREE DECLARATION[dec]										{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, INT_DECLARATION); }		// Fixed Soon
+	| AVL_TREE DECLARATION[dec] ASSIGN function_call[fun]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, AVL_DECLARATION, NULL, $fun); }	
+	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, INT_DECLARATION); }		
 	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, BOOL_DECLARATION); }
-	| CONSTANT_TYPE DECLARATION[dec]								{ $$ = DeclarationSemanticAction($dec, CONST_DECLARATION); }
+	| CONSTANT_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, CONST_DECLARATION, $exp, NULL); }	
+	| INT_TYPE DECLARATION[dec] ASSIGN expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, INT_DECLARATION, $exp, NULL); }
+	| INT_TYPE DECLARATION[dec] ASSIGN function_call[fun]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, INT_DECLARATION, NULL, $fun); }
+	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, BOOL_DECLARATION, $exp, NULL); }
+	| BOOLEAN_TYPE DECLARATION[dec]	ASSIGN function_call[fun]		{ $$ = DeclarationWithAssignmentSemanticAction($dec, BOOL_DECLARATION, NULL, $fun); } 
 	;
 	
-assignment: declaration[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
-	| declaration[dec] ASSIGN function_call[fun]					{ $$ = AssignmentSemanticAction($dec, NULL, $fun); }
+assignment: DECLARATION[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
+	| DECLARATION[dec] ASSIGN function_call[fun]					{ $$ = AssignmentSemanticAction($dec, NULL, $fun); }
 	;
 
 expression: expression[left] MOD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, MODULE_EXP); }
@@ -217,7 +226,9 @@ expression: expression[left] MOD expression[right]					{ $$ = ArithmeticExpressi
 
 factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
 	| constant														{ $$ = ConstantFactorSemanticAction($1); }
+	| DECLARATION													{ $$ = DeclarationFactorSemanticAction($1); } 
 	;
 
 constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
+	| BOOLEAN														{ $$ = BooleanConstantSemanticAction($1); }
 	;

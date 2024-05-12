@@ -50,13 +50,20 @@ typedef struct {
 typedef enum {
 	EXPRESSION_FACTOR,
 	CONSTANT_FACTOR,
-	VARIABLE_FACTOR
+	DECLARATION_FACTOR,
 } FactorType;
+
+typedef struct {
+	VarType type;
+	char * varName;
+    struct Assignment * assignment;
+} Declaration;
 
 struct Factor {
 	union {
 		Constant * constant;
 		Expression * expression;
+		Declaration * declaration;
 	};
 	FactorType type;
 	char * varName;
@@ -127,12 +134,6 @@ typedef enum {
     BOOL_DECLARATION,
 	CONST_DECLARATION,
 } DeclarationType;
-
-typedef struct {
-	VarType type;
-	char * varName;
-    struct Assignment * assignment;
-} Declaration;
 
 typedef enum{
 	INORDER,

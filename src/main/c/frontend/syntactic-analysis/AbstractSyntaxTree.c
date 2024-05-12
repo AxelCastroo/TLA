@@ -205,7 +205,7 @@ void releaseFactor(Factor *factor) {
         case EXPRESSION_FACTOR:
             releaseExpression(factor->expression);
             break;
-        case VARIABLE_FACTOR:
+        case DECLARATION_FACTOR:
             releaseVariable(factor->varName);
             break;
         case CONSTANT_FACTOR:
