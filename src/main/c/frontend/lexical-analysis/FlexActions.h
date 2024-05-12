@@ -49,6 +49,7 @@ Token ForLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token InLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ToLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IfLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token ElseLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);

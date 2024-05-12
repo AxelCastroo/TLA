@@ -27,10 +27,10 @@ static ComputationResult _invalidComputation();
  */
 static BinaryOperator _expressionTypeToBinaryOperator(const ExpressionType type) {
 	switch (type) {
-		case ADDITION: return add;
-		case DIVISION: return divide;
-		case MULTIPLICATION: return multiply;
-		case SUBTRACTION: return subtract;
+		case ADDITION_EXP: return add;
+		case DIVISION_EXP: return divide;
+		case MULTIPLICATION_EXP: return multiply;
+		case SUBTRACTION_EXP: return subtract;
 		default:
 			logError(_logger, "The specified expression type cannot be converted into character: %d", type);
 			return _invalidBinaryOperator;
@@ -97,17 +97,17 @@ ComputationResult subtract(const int minuend, const int subtract) {
 ComputationResult computeConstant(Constant * constant) {
 	ComputationResult computationResult = {
 		.succeed = true,
-		.value = constant->value
+		.value = constant->intValue
 	};
 	return computationResult;
 }
 
 ComputationResult computeExpression(Expression * expression) {
 	switch (expression->type) {
-		case ADDITION:
-		case DIVISION:
-		case MULTIPLICATION:
-		case SUBTRACTION:
+		case ADDITION_EXP:
+		case DIVISION_EXP:
+		case MULTIPLICATION_EXP:
+		case SUBTRACTION_EXP:
 			ComputationResult leftResult = computeExpression(expression->leftExpression);
 			ComputationResult rightResult = computeExpression(expression->rightExpression);
 			if (leftResult.succeed && rightResult.succeed) {
@@ -117,7 +117,7 @@ ComputationResult computeExpression(Expression * expression) {
 			else {
 				return _invalidComputation();
 			}
-		case FACTOR:
+		case FACTOR_EXP:
 			return computeFactor(expression->factor);
 		default:
 			return _invalidComputation();
@@ -126,9 +126,9 @@ ComputationResult computeExpression(Expression * expression) {
 
 ComputationResult computeFactor(Factor * factor) {
 	switch (factor->type) {
-		case CONSTANT:
+		case CONSTANT_FACTOR:
 			return computeConstant(factor->constant);
-		case EXPRESSION:
+		case EXPRESSION_FACTOR:
 			return computeExpression(factor->expression);
 		default:
 			return _invalidComputation();

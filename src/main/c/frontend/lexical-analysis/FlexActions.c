@@ -62,6 +62,7 @@ Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerCon
 		case '*': token = MUL; break;
 		case '/': token = DIV; break;
 		case '+': token = ADD; break;
+		case '%': token = MOD; break;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return token;
@@ -164,6 +165,8 @@ Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 		case ',': token = COMMA; break;
 		case '=': token = ASSIGN; break;
 		case '!': token = NOT; break;
+		case '&': token = AND; break;
+		case '|': token = OR; break;
 	}
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return token;
@@ -191,6 +194,12 @@ Token IfLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = IF;
 	return IF;
+}
+
+Token ElseLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = ELSE;
+	return ELSE;
 }
 
 Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){

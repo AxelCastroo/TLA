@@ -34,7 +34,7 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Constant * constant = calloc(1, sizeof(Constant));
-	constant->value = value;
+	constant->intValue = value;
 	return constant;
 }
 
@@ -51,7 +51,7 @@ Expression * FactorExpressionSemanticAction(Factor * factor) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->factor = factor;
-	expression->type = FACTOR;
+	expression->type = FACTOR_EXP;
 	return expression;
 }
 
@@ -59,7 +59,7 @@ Factor * ConstantFactorSemanticAction(Constant * constant) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->constant = constant;
-	factor->type = CONSTANT;
+	factor->type = CONSTANT_FACTOR;
 	return factor;
 }
 
@@ -67,14 +67,14 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->expression = expression;
-	factor->type = EXPRESSION;
+	factor->type = EXPRESSION_FACTOR;
 	return factor;
 }
 
 Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
-	program->expression = expression;
+	program->statements = expression;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
 		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());

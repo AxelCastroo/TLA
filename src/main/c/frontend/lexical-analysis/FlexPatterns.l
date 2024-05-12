@@ -35,6 +35,7 @@
 "*"									{ return ArithmeticOperatorLexemeAction(createLexicalAnalyzerContext()); }
 "/"									{ return ArithmeticOperatorLexemeAction(createLexicalAnalyzerContext()); }
 "+"									{ return ArithmeticOperatorLexemeAction(createLexicalAnalyzerContext()); }
+"%"                                 { return ArithmeticOperatorLexemeAction(createLexicalAnalyzerContext()); }
 
 "("									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext()); }
 ")"									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext()); }
@@ -54,6 +55,8 @@
 ">="                                { return GreaterEqualComparisonLexemeAction(createLexicalAnalyzerContext()); }
 ">"                                 { return GreaterComparisonLexemeAction(createLexicalAnalyzerContext()); }
 
+"&"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
+"|"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "!"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 ","                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "="                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
@@ -62,6 +65,7 @@
 "in"                                { return InLexemeAction(createLexicalAnalyzerContext()); }
 "to"                                { return ToLexemeAction(createLexicalAnalyzerContext()); }
 "if"                                { return IfLexemeAction(createLexicalAnalyzerContext()); }
+"else"                              { return ElseLexemeAction(createLexicalAnalyzerContext()); }
 
 "in-order"                          { return InOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
 "post-order"                        { return PostOrderIterationOrderLexemeAction(createLexicalAnalyzerContext()); } 
@@ -89,17 +93,3 @@
 %%
 
 #include "FlexExport.h"
-
-/* BSTree tree
-
-\"[0-9 ]+\"						    { return StringLexemeAction(createLexicalAnalyzerContext()); }
-
-for n in (1 to 10){
-
-}
-
-Int count = 0;
-iterate(tree in-order){
- 
-}
-*/

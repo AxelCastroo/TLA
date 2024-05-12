@@ -34,10 +34,10 @@ static void _output(const unsigned int indentationLevel, const char * const form
  */
 static const char _expressionTypeToCharacter(const ExpressionType type) {
 	switch (type) {
-		case ADDITION: return '+';
-		case DIVISION: return '/';
-		case MULTIPLICATION: return '*';
-		case SUBTRACTION: return '-';
+		case ADDITION_EXP: return '+';
+		case DIVISION_EXP: return '/';
+		case MULTIPLICATION_EXP: return '*';
+		case SUBTRACTION_EXP: return '-';
 		default:
 			logError(_logger, "The specified expression type cannot be converted into character: %d", type);
 			return '\0';
@@ -49,7 +49,7 @@ static const char _expressionTypeToCharacter(const ExpressionType type) {
  */
 static void _generateConstant(const unsigned int indentationLevel, Constant * constant) {
 	_output(indentationLevel, "%s", "[ $C$, circle, draw, black!20\n");
-	_output(1 + indentationLevel, "%s%d%s", "[ $", constant->value, "$, circle, draw ]\n");
+	_output(1 + indentationLevel, "%s%d%s", "[ $", constant->intValue, "$, circle, draw ]\n");
 	_output(indentationLevel, "%s", "]\n");
 }
 
@@ -72,15 +72,15 @@ static void _generateEpilogue(const int value) {
 static void _generateExpression(const unsigned int indentationLevel, Expression * expression) {
 	_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
 	switch (expression->type) {
-		case ADDITION:
-		case DIVISION:
-		case MULTIPLICATION:
-		case SUBTRACTION:
+		case ADDITION_EXP:
+		case DIVISION_EXP:
+		case MULTIPLICATION_EXP:
+		case SUBTRACTION_EXP:
 			_generateExpression(1 + indentationLevel, expression->leftExpression);
 			_output(1 + indentationLevel, "%s%c%s", "[ $", _expressionTypeToCharacter(expression->type), "$, circle, draw, purple ]\n");
 			_generateExpression(1 + indentationLevel, expression->rightExpression);
 			break;
-		case FACTOR:
+		case FACTOR_EXP:
 			_generateFactor(1 + indentationLevel, expression->factor);
 			break;
 		default:
@@ -96,10 +96,10 @@ static void _generateExpression(const unsigned int indentationLevel, Expression 
 static void _generateFactor(const unsigned int indentationLevel, Factor * factor) {
 	_output(indentationLevel, "%s", "[ $F$, circle, draw, black!20\n");
 	switch (factor->type) {
-		case CONSTANT:
+		case CONSTANT_FACTOR:
 			_generateConstant(1 + indentationLevel, factor->constant);
 			break;
-		case EXPRESSION:
+		case EXPRESSION_FACTOR:
 			_output(1 + indentationLevel, "%s", "[ $($, circle, draw, purple ]\n");
 			_generateExpression(1 + indentationLevel, factor->expression);
 			_output(1 + indentationLevel, "%s", "[ $)$, circle, draw, purple ]\n");
@@ -115,7 +115,7 @@ static void _generateFactor(const unsigned int indentationLevel, Factor * factor
  * Generates the output of the program.
  */
 static void _generateProgram(Program * program) {
-	_generateExpression(3, program->expression);
+	_generateExpression(3, program->statements);
 }
 
 /**
