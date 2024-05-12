@@ -31,7 +31,7 @@ IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block 
 ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, Block *block);
 RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *end);
 Block *BlockSemanticAction(StatementList statementList);
-Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
+Assignment *AssignmentSemanticAction(Declaration *declaration, Expression *expression, FunctionCall *functionCall);
 Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType);
 FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type);
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block);

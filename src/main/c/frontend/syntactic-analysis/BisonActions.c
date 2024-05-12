@@ -145,9 +145,9 @@ Block *BlockSemanticAction(StatementList statementList) {
 	return new;
 }
 
-Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall) {
+Assignment *AssignmentSemanticAction(Declaration *declaration, Expression *expression, FunctionCall *functionCall) {
 	Assignment * new = malloc(sizeof(Assignment));
-	new->varName = varName;
+	new->varName = declaration->varName;
 	new->expression = expression;
 	new->functionCall = functionCall;
 	return new;

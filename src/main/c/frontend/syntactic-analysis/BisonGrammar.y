@@ -128,13 +128,16 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
-%left ADD SUB
-%left MUL DIV
-%left MOD
-%left AND OR NOT
+
+%left ASSIGN
+%left OR 
+%left AND 
 %left EQUAL NOT_EQUAL
 %left LESS LESS_EQUAL GREATER GREATER_EQUAL
-%left ASSIGN
+%left ADD SUB
+%left MUL DIV MOD
+%left NOT
+
 
 %%
 
@@ -157,7 +160,7 @@ block: OPEN_BRACKET statement_list[stat] CLOSE_BRACKET 				{ $$ = BlockSemanticA
 	;
 
 if_statement: IF OPEN_PARENTHESIS expression[exp] CLOSE_PARENTHESIS block[if] ELSE block[else]		{ $$ = IfStatementSemanticAction($exp, $if, $else); }
-	| IF OPEN_PARENTHESIS expression[exp] CLOSE_PARENTHESIS block[bl]							{ $$ = IfStatementSemanticAction($exp, $bl, NULL); }
+	| IF OPEN_PARENTHESIS expression[exp] CLOSE_PARENTHESIS block[bl]								{ $$ = IfStatementSemanticAction($exp, $bl, NULL); }
 	;
 
 for_statement: FOR DECLARATION[dec] IN range_expression[range] block[bl]							{ $$ = ForStatementSemanticAction($dec, $range, $bl); }
@@ -172,9 +175,9 @@ function_call: DECLARATION[dec] INSERT expression[exp]				{ $$ = FunctionCallSem
 	| DECLARATION[dec] HEIGHT 										{ $$ = FunctionCallSemanticAction($dec, NULL, HEIGHT_CALL); }
 	| DECLARATION[dec] DEPTH expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, DEPTH_CALL); }
 	| DECLARATION[dec] CALCULATE									{ $$ = FunctionCallSemanticAction($dec, NULL, CALCULATE_CALL); }	
-	| DECLARATION[dec] VISUALIZE									{ $$ = FunctionCallSemanticAction($dec, NULL,VISUALIZE_CALL); }
+	| DECLARATION[dec] VISUALIZE									{ $$ = FunctionCallSemanticAction($dec, NULL, VISUALIZE_CALL); }
 	| DECLARATION[dec] ADD DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, ADD_CALL); }
-	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL,SUB_CALL); }
+	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, SUB_CALL); }
 	;
 
 iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CLOSE_PARENTHESIS block[bl]			{ $$ = IterateSemanticAction($dec, $order, $bl); }
@@ -186,20 +189,16 @@ declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticActi
 	| BINARY_SEARCH_TREE DECLARATION[dec]							{ $$ = DeclarationSemanticAction($dec, BST_DECLARATION); }
 	| EXPRESSION_TREE DECLARATION[dec] expression					{ $$ = DeclarationSemanticAction($dec, EXP_DECLARATION); }
 	| AVL_TREE DECLARATION[dec]										{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }		// Fixed Soon
-	| INT_TYPE DECLARATION[dec] ASSIGN expression					{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| INT_TYPE DECLARATION[dec] ASSIGN function_call				{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN expression				{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN function_call			{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }			
-	| CONSTANT_TYPE DECLARATION[dec] ASSIGN expression				{ $$ = DeclarationSemanticAction($dec, CONST_DECLARATION); }
+	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, INT_DECLARATION); }		// Fixed Soon
+	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, BOOL_DECLARATION); }
+	| CONSTANT_TYPE DECLARATION[dec]								{ $$ = DeclarationSemanticAction($dec, CONST_DECLARATION); }
 	;
 	
-assignment: DECLARATION[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
-	| DECLARATION[dec] ASSIGN function_call[fun]					{ $$ = AssignmentSemanticAction($dec, NULL, $fun); }
+assignment: declaration[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
+	| declaration[dec] ASSIGN function_call[fun]					{ $$ = AssignmentSemanticAction($dec, NULL, $fun); }
 	;
 
-expression : expression[left] MOD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, MODULE_EXP); }
+expression: expression[left] MOD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, MODULE_EXP); }
 	| expression[left] AND expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, AND_EXP);}
 	| expression[left] OR expression[right]							{ $$ = ArithmeticExpressionSemanticAction($left, $right, OR_EXP);}
 	| NOT expression[exp]											{ $$ = ArithmeticExpressionSemanticAction(NULL , $exp, NOT_EXP);}
