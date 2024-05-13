@@ -58,7 +58,6 @@
 "&"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "|"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "!"                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
-","                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 "="                                 { return PunctuationLexemeAction(createLexicalAnalyzerContext()); }
 
 "for"                               { return ForLexemeAction(createLexicalAnalyzerContext()); }

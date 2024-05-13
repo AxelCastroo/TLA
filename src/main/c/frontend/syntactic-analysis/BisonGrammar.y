@@ -76,7 +76,6 @@
 
 %token <token> AND
 %token <token> OR
-%token <token> COMMA
 %token <token> ASSIGN
 %token <token> NOT
 

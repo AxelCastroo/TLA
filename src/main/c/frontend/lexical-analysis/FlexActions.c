@@ -162,7 +162,6 @@ Token PunctuationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	Token token;
 	switch (lexicalAnalyzerContext->lexeme[0]) {
-		case ',': token = COMMA; break;
 		case '=': token = ASSIGN; break;
 		case '!': token = NOT; break;
 		case '&': token = AND; break;
