@@ -45,14 +45,6 @@ Constant * BooleanConstantSemanticAction(const bool value) {
 	return constant;
 }
 
-// Constant * ConstantSemanticAction(const int value, const bool value) {
-// 	_logSyntacticAnalyzerAction(__FUNCTION__);
-// 	Constant * constant = calloc(1, sizeof(Constant));
-// 	constant->intValue = value;
-// 	constant->boolValue = value;
-// 	return constant;
-// }
-
 Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));

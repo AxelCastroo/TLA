@@ -1,0 +1,3 @@
+/* Redefinition of trees */
+BSTree tree1
+AVLTree tree1

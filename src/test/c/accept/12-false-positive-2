@@ -1,0 +1,3 @@
+/* Redeclaration of variable */
+Int N = 5
+Int N = 1212121212
