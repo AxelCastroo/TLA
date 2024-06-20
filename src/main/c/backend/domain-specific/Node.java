@@ -3,7 +3,8 @@ public class Node<T extends Comparable<T>> {
     private Node<T> left;
     private Node<T> right;
     private Node<T> parent;
-    private boolean color;  
+    private boolean color;
+    private int height;
 
     // Constructor
     public Node(T data) {
@@ -12,6 +13,7 @@ public class Node<T extends Comparable<T>> {
         this.right = null;
         this.parent = null;
         this.color = true; // New nodes are red by default in Red-Black Tree
+        this.height = 1;   // Height is initially 1 for a new node
     }
 
     // Getters and setters
@@ -73,5 +75,13 @@ public class Node<T extends Comparable<T>> {
 
     public boolean isLeaf() {
         return (this.left == null && this.right == null);
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }
