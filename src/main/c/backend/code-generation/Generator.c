@@ -1,6 +1,6 @@
 #include "Generator.h"
-#include "Logger.h"
-#include "String.h"
+#include "../../shared/Logger.h"
+#include "../../shared/String.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
