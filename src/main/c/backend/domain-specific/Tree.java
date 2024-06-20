@@ -45,13 +45,11 @@ private boolean contains(Node<T> node, T element) {
         return heightFromNode(root);
     }
 
-    protected int heightFromNode(Node<T> node) {
+  protected int heightFromNode(Node<T> node) {
         if (node == null) {
-            return -1; 
+            return 0;
         }
-        int leftHeight = heightFromNode(node.getLeft());
-        int rightHeight = heightFromNode(node.getRight());
-        return Math.max(leftHeight, rightHeight) + 1;
+        return node.getHeight();
     }
 
      public int depth(T element) {
