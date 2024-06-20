@@ -23,6 +23,9 @@
  * @see https://westes.github.io/flex/manual/Patterns.html
  */
 
+boolean (true|false)
+
+
 %%
 
 "/*"								{ BEGIN(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
@@ -84,6 +87,7 @@
 "iterate"                           { return IterateLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
+{boolean}                           { return BooleanLexemeAction( createLexicalAnalyzerContext()); }
 [A-Za-z][A-Za-z0-9]*                { return DeclarationLexemeAction(createLexicalAnalyzerContext()); }
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }

@@ -74,7 +74,12 @@ Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	return INTEGER;
 }
 
-
+Token BooleanLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	bool isTrue = (strcmp(lexicalAnalyzerContext->lexeme, "true") == 0);
+	lexicalAnalyzerContext->semanticValue->boolean = isTrue;
+	return BOOLEAN;
+}
 
 Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
