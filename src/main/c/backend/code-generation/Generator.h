@@ -27,6 +27,7 @@ static void _generateExpression(const unsigned int indentationLevel, Expression 
 static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
 static void _generateProgram(Program * program);
 static void _generatePrologue(void);
+static void _generateStatementList(StatementList statementList);
 static void _generateStatement(const unsigned int indentationLevel, Statement * statement);
 static void _generateBlock(const unsigned int indentationLevel, Block * block);
 static void _generateIfStatement(const unsigned int indentationLevel, IfStatement * ifStatement);
