@@ -1,4 +1,8 @@
 #include "BisonActions.h"
+#include "../../backend/semantic-analysis/symbolTable.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* MODULE INTERNAL STATE */
 
@@ -120,7 +124,6 @@ Statement * StatementSemanticAction(void *statement, StatementType type) {
         case DECLARATION_STATEMENT: new->declaration = statement; break;
         case FUNCTION_CALL_STATEMENT: new->functionCall = statement; break;
 		case ITERATE_STATEMENT: new->iterateStatement = statement; break;
-        default: assert(0 && "Illegal State"); break;
     }
 
     return new;
@@ -140,6 +143,7 @@ IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block 
 }
 
 ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, Block *block) {
+	SymbolTableDeclareAux(varName, INT_DECLARATION, true);
 	ForStatement * new = malloc(sizeof(ForStatement));
 	new->varName = varName;
 	new->range = range;
@@ -199,4 +203,43 @@ IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block 
 	return new;
 }
 
+static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool hasValue){
+	VarType varType;
+	struct metadata metadata = {
+		.hasValue = hasValue
+	};
 
+	switch (type){
+		case INT_DECLARATION:
+			varType = INT_VAR; break;
+		case BOOL_DECLARATION:
+			varType = BOOL_VAR; break;
+		case RBT_DECLARATION: 
+			varType = RBT_VAR; break;
+		case AVL_DECLARATION:
+			varType = AVL_VAR; break;
+		case BST_DECLARATION:
+			varType = BST_VAR; break;
+		case EXP_DECLARATION: 
+			varType = EXP_VAR; break;
+		case CONST_DECLARATION:
+			varType = CONST_VAR; break;
+	}
+
+	struct key key = {
+		.varname = varname
+	};
+
+	if(symbolTableFind(&key, NULL)){
+		logError(_logger, "Invalid redeclaration of varaible %s", varname);
+		exit(1);
+	}
+
+	struct value value = {
+		.type = varType, 
+		.metadata = metadata
+	};
+	
+	symbolTableInsert(&key, &value);
+	return varType;
+}

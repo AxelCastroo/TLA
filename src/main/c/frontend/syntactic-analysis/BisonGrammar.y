@@ -177,8 +177,8 @@ function_call: DECLARATION[dec] INSERT expression[exp]				{ $$ = FunctionCallSem
 	| DECLARATION[dec] DEPTH expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, DEPTH_CALL); }
 	| DECLARATION[dec] CALCULATE									{ $$ = FunctionCallSemanticAction($dec, NULL, CALCULATE_CALL); }	
 	| DECLARATION[dec] VISUALIZE									{ $$ = FunctionCallSemanticAction($dec, NULL, VISUALIZE_CALL); }
-	| DECLARATION[dec] ADD DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, ADD_CALL); }
-	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, SUB_CALL); }
+	/* | DECLARATION[dec] ADD DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, ADD_CALL); }
+	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, SUB_CALL); } */
 	;
 
 iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CLOSE_PARENTHESIS block[bl]			{ $$ = IterateSemanticAction($dec, $order, $bl); }

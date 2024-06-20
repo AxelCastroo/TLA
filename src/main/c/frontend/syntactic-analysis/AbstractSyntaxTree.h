@@ -4,6 +4,7 @@
 #include "../../shared/Logger.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../../backend/semantic-analysis/symbolTable.h"
 
 /** Initialize module's internal state. */
 void initializeAbstractSyntaxTreeModule();
@@ -25,14 +26,6 @@ typedef struct StatementNode * StatementList;
 /**
  * Node types for the Abstract Syntax Tree (AST).
  */
-
-typedef enum VarType {
-    RBT_VAR,
-    BST_VAR,
-    AVL_VAR,
-    INT_VAR,
-    BOOL_VAR,
-} VarType;
 
 typedef enum {
     INT_CONSTANT,

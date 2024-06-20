@@ -38,4 +38,7 @@ Declaration *DeclarationSemanticAction(char *varName, DeclarationType declaratio
 Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationType declarationType, Expression *expression, FunctionCall *functionCall);
 FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type);
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block);
+
+static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool hasValue);
+
 #endif
