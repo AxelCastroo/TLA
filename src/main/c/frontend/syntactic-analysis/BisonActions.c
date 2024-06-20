@@ -35,6 +35,10 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 /* PUBLIC FUNCTIONS */
 
+static struct key *usedSymbols;
+static VarType *usedSymbolsExpectedType;
+static int usedSymbolsCount = 0;
+
 Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Constant * constant = calloc(1, sizeof(Constant));
@@ -53,10 +57,36 @@ Constant * BooleanConstantSemanticAction(const bool value) {
 
 Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	VarType leftType, rightType;
+
+	if(leftExpression != NULL && rightExpression != NULL && (leftType = getExpressionType(leftExpression)) != (rightType = getExpressionType(rightExpression))){
+		logError(_logger, "Incompatible parameters");
+		exit(1);
+	}
+
+	VarType factorType;
+
+	if(type == AND_EXP || type == OR_EXP || type == NOT_EXP){
+		factorType = BOOL_VAR;
+	}
+	else {
+		factorType = INT_VAR;
+	}
+
+	if(leftExpression != NULL && leftExpression->type == FACTOR_EXP && leftExpression->factor->type == DECLARATION_FACTOR){
+		AddUsedSymbol(leftExpression->factor->varName, factorType);
+	}
+
+	if(rightExpression != NULL && rightExpression->type == FACTOR_EXP && rightExpression->factor->type == DECLARATION_FACTOR){
+		AddUsedSymbol(rightExpression->factor->varName, factorType);
+	}
+
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->leftExpression = leftExpression;
 	expression->rightExpression = rightExpression;
 	expression->type = type;
+	expression->factor = NULL;
 	return expression;
 }
 
@@ -64,6 +94,8 @@ Expression * FactorExpressionSemanticAction(Factor * factor) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->factor = factor;
+	expression->leftExpression = NULL;
+	expression->rightExpression = NULL;
 	expression->type = FACTOR_EXP;
 	return expression;
 }
@@ -430,4 +462,33 @@ static int getExpressionType(Expression *expression){
 			logError(_logger, "Invalid expression type");
 			exit(1);
 	}
+}
+
+static void AddUsedSymbol(char *varname, VarType expectedType){
+	struct key key = {.varname = varname};
+
+    for (int i = 0; i < usedSymbolsCount; i++) {
+        if (strcmp(usedSymbols[i].varname, varname) == 0) {
+            if (usedSymbolsExpectedType[i] != expectedType) {
+                logError(_logger, "Variable %s conflicting types", varname);
+                exit(1);
+            }
+            return;
+        }
+    }
+
+    if (usedSymbolsCount == 0) {
+        usedSymbols = malloc(sizeof(struct key));
+        usedSymbolsExpectedType = malloc(sizeof(VarType));
+    } else if (usedSymbolsCount % 10 == 0) {
+        usedSymbols = realloc(usedSymbols, sizeof(struct key) * (usedSymbolsCount + 10));
+        usedSymbolsExpectedType = realloc(usedSymbolsExpectedType, sizeof(VarType) * (usedSymbolsCount + 10));
+    }
+
+    printf("Adding %s\n", varname);
+
+    usedSymbols[usedSymbolsCount] = key;
+    usedSymbolsExpectedType[usedSymbolsCount++] = expectedType;
+
+    printf("Added %s\n", usedSymbols[usedSymbolsCount - 1].varname);
 }

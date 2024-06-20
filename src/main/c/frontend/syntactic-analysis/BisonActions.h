@@ -43,5 +43,6 @@ IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block 
 static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool hasValue);
 static int getExpressionType(Expression *expression);
 static int getFunctionCallType(FunctionCall *functionCall);
+static void AddUsedSymbol(char *varname, VarType expectedType);
 
 #endif
