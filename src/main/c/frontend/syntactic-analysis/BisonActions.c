@@ -39,6 +39,7 @@ Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Constant * constant = calloc(1, sizeof(Constant));
 	constant->intValue = value;
+	constant->type = INT_CONSTANT;
 	return constant;
 }
 
@@ -46,6 +47,7 @@ Constant * BooleanConstantSemanticAction(const bool value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Constant * constant = calloc(1, sizeof(Constant));
 	constant->boolValue = value;
+	constant->type = BOOL_CONSTANT;
 	return constant;
 }
 
@@ -70,6 +72,8 @@ Factor * ConstantFactorSemanticAction(Constant * constant) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->constant = constant;
+	factor->expression = NULL;
+	factor->varName = NULL;
 	factor->type = CONSTANT_FACTOR;
 	return factor;
 }
@@ -78,6 +82,8 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->expression = expression;
+	factor->constant = NULL;
+	factor->varName = NULL;
 	factor->type = EXPRESSION_FACTOR;
 	return factor;
 }
@@ -86,6 +92,8 @@ Factor * DeclarationFactorSemanticAction(char * varName) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
 	factor->varName = varName;
+	factor->expression = NULL;
+	factor->constant = NULL;
 	factor->type = DECLARATION_FACTOR;
 	return factor;
 }
