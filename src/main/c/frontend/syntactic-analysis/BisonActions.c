@@ -130,10 +130,18 @@ Statement * StatementSemanticAction(void *statement, StatementType type) {
 }
 
 IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block *else_block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	if(getExpressionType(cond) != BOOL_VAR){
+		logError(_logger, "Condition must be a boolean expression");
+		exit(1);
+	}
+
     IfStatementType type = IF_ELSE_TYPE;
     if (else_block == NULL) {
         type = IF_TYPE;
     }
+
     IfStatement * new = malloc(sizeof(IfStatement));
     new->type = type;
     new->condition = cond;
@@ -143,6 +151,7 @@ IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block 
 }
 
 ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, Block *block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SymbolTableDeclareAux(varName, INT_DECLARATION, true);
 	ForStatement * new = malloc(sizeof(ForStatement));
 	new->varName = varName;
@@ -152,6 +161,7 @@ ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, 
 }
 
 RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *end) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);	
 	RangeExpression * new = malloc(sizeof(RangeExpression));
 	new->expressionRight = start;
 	new->expressionLeft = end;
@@ -159,12 +169,44 @@ RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *en
 }
 
 Block *BlockSemanticAction(StatementList statementList) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Block * new = malloc(sizeof(Block));
 	new->statements = statementList;
 	return new;
 }
 
 Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	struct key key = {
+		.varname = varName
+	};
+
+	struct value value;
+
+	if(!symbolTableFind(&key, &value)){
+		logError(_logger, "Variable %s undeclared", varName);
+		exit(1);
+	}
+
+	if(value.type != INT_VAR && value.type != BOOL_VAR){
+		logError(_logger, "Variable %s is not a defined data type", varName);
+		exit(1);
+	}
+
+	if(functionCall != NULL && getFunctionCallType(functionCall) != value.type){
+		logError(_logger, "Function return cannot be assigned to %s", varName);
+		exit(1);
+	}
+
+	if(expression != NULL && getExpressionType(expression) != value.type){
+		logError(_logger, "Expression cannot be assigned to %s", varName);
+		exit(1);
+	}
+
+	value.metadata.hasValue = true;
+	symbolTableInsert(&key, &value);
+
 	Assignment * new = malloc(sizeof(Assignment));
 	new->varName = varName;
 	new->expression = expression;
@@ -173,6 +215,7 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 }
 
 Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
 	new->assignment = NULL;
@@ -180,6 +223,7 @@ Declaration *DeclarationSemanticAction(char *varName, DeclarationType declaratio
 }
 
 Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationType declarationType, Expression *expression, FunctionCall *functionCall) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
 	new->assignment = NULL;
@@ -187,6 +231,17 @@ Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationT
 }
 
 FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	struct key key = {
+		.varname = varName
+	};
+
+	if(!symbolTableFind(&key, NULL)){
+		logError(_logger, "Variable %d undeclared", varName);
+		exit(1);
+	}
+
 	FunctionCall * new = malloc(sizeof(FunctionCall));
     new->type = type;
     new->varName = varName;
@@ -196,6 +251,7 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 }
 
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	IterateStatement * new = malloc(sizeof(IterateStatement));
 	new->varName = varName;
 	new->type = type;
@@ -242,4 +298,60 @@ static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool h
 	
 	symbolTableInsert(&key, &value);
 	return varType;
+}
+
+static int getFunctionCallType(FunctionCall *functionCall){
+	switch(functionCall->type){
+		case HEIGHT_CALL:
+		case DEPTH_CALL:
+			return INT_VAR;
+		case INCLUDES_CALL:
+			return BOOL_VAR;
+		default:
+			return -1;
+	}
+}
+
+static int getExpressionType(Expression *expression){
+	struct key key;
+	struct value value;
+	switch (expression->type){
+		case ADDITION_EXP:
+		case SUBTRACTION_EXP:
+		case MULTIPLICATION_EXP:
+		case DIVISION_EXP:
+		case MODULE_EXP:
+			return (getExpressionType(expression->leftExpression) == INT_VAR && getExpressionType(expression->rightExpression) == INT_VAR) ? INT_VAR : -1;
+		case AND_EXP:
+		case OR_EXP:	
+			return (getExpressionType(expression->leftExpression) == BOOL_VAR && getExpressionType(expression->rightExpression) == BOOL_VAR) ? BOOL_VAR : -1;
+		case NOT_EXP:
+			return (getExpressionType(expression->leftExpression) == BOOL_VAR) ? BOOL_VAR : -1;
+		case EQUAL_EXP:
+		case NOT_EQUAL_EXP:
+		case LESS_EQUAL_EXP:
+		case LESS_EXP:
+		case GREATER_EQUAL_EXP:
+		case GREATER_EXP:
+			return (getExpressionType(expression->leftExpression) == getExpressionType(expression->rightExpression)) ? BOOL_VAR : -1;
+		case FACTOR_EXP:
+			switch(expression->factor->type){
+				case CONSTANT_FACTOR:
+					return expression->factor->constant->type == INT_CONSTANT ? INT_VAR : BOOL_VAR;
+				case EXPRESSION_FACTOR: 
+					return getExpressionType(expression->factor->expression);
+				case DECLARATION_FACTOR:
+					key.varname = expression->factor->varName;
+					if(!symbolTableFind(&key, &value)){
+						return INT_VAR;
+					}
+					return value.type;
+				default:
+					logError(_logger, "Invalid factor type");
+					exit(1);
+			}
+		default: 
+			logError(_logger, "Invalid expression type");
+			exit(1);
+	}
 }

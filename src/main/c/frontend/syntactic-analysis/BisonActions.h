@@ -40,5 +40,7 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block);
 
 static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool hasValue);
+static int getExpressionType(Expression *expression);
+static int getFunctionCallType(FunctionCall *functionCall);
 
 #endif
