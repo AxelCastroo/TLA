@@ -49,6 +49,7 @@ static const char _expressionTypeToCharacter(const ExpressionType type) {
         case DIVISION_EXP: return '/';
         case MULTIPLICATION_EXP: return '*';
         case SUBTRACTION_EXP: return '-';
+        case MODULE_EXP: return '%';
         default:
             logError(_logger, "The specified expression type cannot be converted into character: %d", type);
             return '\0';
@@ -59,7 +60,12 @@ static const char _expressionTypeToCharacter(const ExpressionType type) {
  * Generates the output of a constant.
  */
 static void _generateConstant(const unsigned int indentationLevel, Constant * constant) {
-    _output(indentationLevel, "%d", constant->intValue);
+    if (constant->type == INT_CONSTANT){
+        _output(indentationLevel, "%d", constant->intValue);
+    }
+    else {
+        _output(indentationLevel, "%s", constant->boolValue ? "true" : "false");
+    }
 }
 
 /**
@@ -81,6 +87,50 @@ static void _generateExpression(const unsigned int indentationLevel, Expression 
         case SUBTRACTION_EXP:
             _generateExpression(indentationLevel, expression->leftExpression);
             _output(indentationLevel, " %c ", _expressionTypeToCharacter(expression->type));
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case AND_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " && ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case NOT_EXP: 
+            _output(indentationLevel, "!");
+            _generateExpression(indentationLevel, expression->leftExpression);
+            break;
+        case OR_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentation, " || ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case EQUAL_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " == ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case NOT_EQUAL_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " != ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case LESS_EXP: 
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " < ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case LESS_EQUAL_EXP: 
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " <= ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case GREATER_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " > ");
+            _generateExpression(indentationLevel, expression->rightExpression);
+            break;
+        case GREATER_EQUAL_EXP:
+            _generateExpression(indentationLevel, expression->leftExpression);
+            _output(indentationLevel, " >= ");
             _generateExpression(indentationLevel, expression->rightExpression);
             break;
         case FACTOR_EXP:
@@ -105,6 +155,9 @@ static void _generateFactor(const unsigned int indentationLevel, Factor * factor
             _generateExpression(indentationLevel, factor->expression);
             _output(indentationLevel, ")");
             break;
+        case DECLARATION_FACTOR: 
+            _output(indentationLevel, "%s", factor->varName);
+            break;
         default:
             logError(_logger, "The specified factor type is unknown: %d", factor->type);
             break;
@@ -115,15 +168,75 @@ static void _generateFactor(const unsigned int indentationLevel, Factor * factor
  * Generates the output of the program.
  */
 static void _generateProgram(Program * program) {
+    _output(0, "import java.io.IOException;\n");
     _output(0, "public class Main {\n");
-    _output(1, "public static void main(String[] args) {\n");
-    // Generate code for each statement in the program
-    StatementList current = program->statements;
+    _output(1, "public static void main(String[] args) throws IOException{\n");
+    _generateStatementList(program->statements);
+    _generateEpilogue();
+}
+
+/** 
+ * Generates the output of a statementlist.  
+ */
+static void _generateStatementList(StatementList statementList){
+    StatementList current = statementList;
     while (current != NULL) {
         _generateStatement(1, current->statement);
         current = current->next;
     }
-    _generateEpilogue();
+}
+
+/** 
+ * Generates the output of a declaration. 
+ */
+static void _generateDeclaration(const unsigned int indentationLevel, Declaration * declaration){
+    switch (declaration->type){
+    case RBT_DECLARATION:
+        _output(indentationLevel, "Tree<Integer> %s = new RBT<> ();\n", declaration->varName);
+        break;
+    case AVL_DECLARATION:
+        _output(indentationLevel, "Tree<Integer> %s = new AVL<>(); \n", declaration->varName);
+        break;
+    case BST_DECLARATION:
+        _output(indentationLevel, "Tree<Integer> %s = new BST<>();\n", declaration->varName);
+        break;
+    // EXP_DECLARATION!!
+    case INT_DECLARATION:
+        _output(indentationLevel, "int ");
+        if (declaration->assignment != NULL){
+            _generateAssignment(indentationLevel, declaration->assignment);
+            _output(indentationLevel, ";\n");
+        }
+        else {
+            _output(indentationLevel, "%s;\n", declaration->varName);
+        }
+        break;
+    case BOOL_DECLARATION:
+        _output(indentationLevel, "boolean ");
+        if(declaration->assignment != NULL){
+            _generateAssignment(indentationLevel, declaration->assignment);
+            _output(indentationLevel, ";\n");
+        }
+        else {
+            _output(indentationLevel, "%s;\n", declaration->varName);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+/** 
+ * Generates the output of an assignment. 
+ */
+static void _generateAssignment(const unsigned int indentationLevel, Assignment * assignment){
+    _output(indentationLevel, "%s = ", assignment->varName);
+    if(assignment->expression != NULL){
+        _generateExpression(indentationLevel, assignment->expression);
+    }
+    if(assignment->functionCall != NULL){
+        _generateFunctionCall(assignment->functionCall);
+    }
 }
 
 /**
@@ -165,7 +278,6 @@ static void _generateStatement(const unsigned int indentationLevel, Statement * 
         case FOR_STATEMENT:
             _generateForStatement(indentationLevel, statement->forStatement);
             break;
-       
         case FUNCTION_CALL_STATEMENT:
             _generateFunctionCall(indentationLevel, statement->functionCall);
             break;
@@ -197,8 +309,6 @@ static void _generateIfStatement(const unsigned int indentationLevel, IfStatemen
     }
 }
 
-
-
 /**
  * Generates a for statement.
  */
@@ -209,6 +319,12 @@ static void _generateForStatement(const unsigned int indentationLevel, ForStatem
     _generateExpression(indentationLevel, forStatement->range->expressionRight);
     _output(indentationLevel, "; %s++) ", forStatement->varName);
     _generateBlock(indentationLevel, forStatement->block);
+}
+
+static void _generateBlock(const unsigned int indentationLevel, Block * block){
+    _output(indentationLevel, "{\n");
+    _generateStatementList(block->statements);
+    _output(indentationLevel, "{\n}");
 }
 
 /**
