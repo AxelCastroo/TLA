@@ -291,7 +291,7 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 	};
 
 	if(!symbolTableFind(&key, NULL)){
-		logError(_logger, "Variable %d undeclared", varName);
+		logError(_logger, "Variable %s undeclared", varName);
 		exit(1);
 	}
 
@@ -305,6 +305,21 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	struct key key = {
+		.varname = varName
+	};
+
+	if(!symbolTableFind(&key, NULL)){
+		logError(_logger, "Variable %s undeclared", varName);
+		exit(1);
+	}
+
+	if(type != INORDER && type != POSTORDER && type != PREORDER){
+		logError(_logger, "Invalid order type");
+		exit(1);
+	}
+
 	IterateStatement * new = malloc(sizeof(IterateStatement));
 	new->varName = varName;
 	new->type = type;
