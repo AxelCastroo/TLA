@@ -162,9 +162,15 @@ ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, 
 
 RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *end) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);	
+
+	if((start != NULL && getExpressionType(start) != INT_VAR) || (end && getExpressionType(end) != INT_VAR)){
+		logError(_logger, "Invalid parameters type");
+		exit(1);
+	}
+
 	RangeExpression * new = malloc(sizeof(RangeExpression));
-	new->expressionRight = start;
-	new->expressionLeft = end;
+	new->expressionLeft = start;
+	new->expressionRight = end;
 	return new;
 }
 
@@ -216,17 +222,64 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 
 Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	VarType varType = SymbolTableDeclareAux(varName, declarationType, false);
+
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
 	new->assignment = NULL;
+	new->type = varType;
 	return new;
 }
 
-Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationType declarationType, Expression *expression, FunctionCall *functionCall) {
+Declaration *BooleanDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	VarType varType = SymbolTableDeclareAux(varName, BOOL_DECLARATION, true);
+
+	if(functionCall != NULL && getFunctionCallType(functionCall) != BOOL_VAR){
+		logError(_logger, "Function can not be assigned to %s", varName);
+		exit(1);	
+	}
+
+	if(expression != NULL && getExpressionType(expression) != BOOL_VAR){
+		logError(_logger, "Expression can not be assigned to %s", varName);
+		exit(1);
+	}
+
+	Assignment * assignment = malloc(sizeof(Assignment));
+	assignment->varName = varName;
+	assignment->expression = expression;
+	assignment->functionCall = functionCall;
+
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
-	new->assignment = NULL;
+	new->assignment = assignment;
+	return new;
+}
+
+Declaration *IntegerDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	VarType varType = SymbolTableDeclareAux(varName, INT_DECLARATION, true);
+
+	if(functionCall != NULL && getFunctionCallType(functionCall) != INT_VAR){
+		logError(_logger, "Function can not be assigned to %s", varName);
+		exit(1);
+	}
+
+	if(expression != NULL && getExpressionType(expression) != INT_VAR){
+		logError(_logger, "Expression can not be assigned to %s", varName);
+		exit(1);
+	}
+
+	Assignment * assignment = malloc(sizeof(Assignment));
+	assignment->varName = varName;
+	assignment->expression = expression;
+	assignment->functionCall = functionCall;
+
+	Declaration * new = malloc(sizeof(Declaration));
+	new->varName = varName;
+	new->assignment = assignment;
 	return new;
 }
 

@@ -35,7 +35,8 @@ RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *en
 Block *BlockSemanticAction(StatementList statementList);
 Assignment *AssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
 Declaration *DeclarationSemanticAction(char *varName, DeclarationType declarationType);
-Declaration *DeclarationWithAssignmentSemanticAction(char *varName, DeclarationType declarationType, Expression *expression, FunctionCall *functionCall);
+Declaration *IntegerDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
+Declaration *BooleanDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
 FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type);
 IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block);
 

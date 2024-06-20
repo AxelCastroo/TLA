@@ -187,19 +187,16 @@ iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CL
 	;
 
 declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticAction($dec, RBT_DECLARATION); }
-	| RED_BLACK_TREE DECLARATION[dec] ASSIGN function_call[fun]		{ $$ = DeclarationWithAssignmentSemanticAction($dec, RBT_DECLARATION, NULL, $fun); }	
 	| BINARY_SEARCH_TREE DECLARATION[dec]							{ $$ = DeclarationSemanticAction($dec, BST_DECLARATION); }
-	| BINARY_SEARCH_TREE DECLARATION[dec] ASSIGN function_call[fun]	{ $$ = DeclarationWithAssignmentSemanticAction($dec, BST_DECLARATION, NULL, $fun); }	
-	| EXPRESSION_TREE DECLARATION[dec] expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, EXP_DECLARATION, $exp, NULL); }
+	/* | EXPRESSION_TREE DECLARATION[dec] expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, EXP_DECLARATION, $exp, NULL); } */
 	| AVL_TREE DECLARATION[dec]										{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
-	| AVL_TREE DECLARATION[dec] ASSIGN function_call[fun]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, AVL_DECLARATION, NULL, $fun); }	
 	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, INT_DECLARATION); }		
 	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, BOOL_DECLARATION); }
-	| CONSTANT_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, CONST_DECLARATION, $exp, NULL); }	
-	| INT_TYPE DECLARATION[dec] ASSIGN expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, INT_DECLARATION, $exp, NULL); }
-	| INT_TYPE DECLARATION[dec] ASSIGN function_call[fun]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, INT_DECLARATION, NULL, $fun); }
-	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, BOOL_DECLARATION, $exp, NULL); }
-	| BOOLEAN_TYPE DECLARATION[dec]	ASSIGN function_call[fun]		{ $$ = DeclarationWithAssignmentSemanticAction($dec, BOOL_DECLARATION, NULL, $fun); } 
+	/* | CONSTANT_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = DeclarationWithAssignmentSemanticAction($dec, CONST_DECLARATION, $exp, NULL); }	 */
+	| INT_TYPE DECLARATION[dec] ASSIGN expression[exp]				{ $$ = IntegerDeclarationWithAssignmentSemanticAction($dec, $exp, NULL); }
+	| INT_TYPE DECLARATION[dec] ASSIGN function_call[fun]			{ $$ = IntegerDeclarationWithAssignmentSemanticAction($dec, NULL, $fun); }
+	| BOOLEAN_TYPE DECLARATION[dec] ASSIGN expression[exp]			{ $$ = BooleanDeclarationWithAssignmentSemanticAction($dec, $exp, NULL); }
+	| BOOLEAN_TYPE DECLARATION[dec]	ASSIGN function_call[fun]		{ $$ = BooleanDeclarationWithAssignmentSemanticAction($dec, NULL, $fun); } 
 	;
 	
 assignment: DECLARATION[dec] ASSIGN expression[exp]					{ $$ = AssignmentSemanticAction($dec, $exp, NULL); }
