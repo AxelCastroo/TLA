@@ -154,10 +154,8 @@ typedef enum {
 
 typedef struct {
 	char * varName;
-	union {
-		Expression * expression;
-		Declaration * declaration;
-	};
+	Expression * expression;
+	Declaration * declaration;
 	FunctionCallType type;
 } FunctionCall;
 

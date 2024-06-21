@@ -41,7 +41,7 @@ static int usedSymbolsCount = 0;
 
 Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Constant * constant = calloc(1, sizeof(Constant));
+	Constant * constant = malloc(sizeof(Constant));
 	constant->intValue = value;
 	constant->type = INT_CONSTANT;
 	return constant;
@@ -49,7 +49,7 @@ Constant * IntegerConstantSemanticAction(const int value) {
 
 Constant * BooleanConstantSemanticAction(const bool value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Constant * constant = calloc(1, sizeof(Constant));
+	Constant * constant = malloc(sizeof(Constant));
 	constant->boolValue = value;
 	constant->type = BOOL_CONSTANT;
 	return constant;
@@ -92,7 +92,7 @@ Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Exp
 
 Expression * FactorExpressionSemanticAction(Factor * factor) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = calloc(1, sizeof(Expression));
+	Expression * expression = malloc(sizeof(Expression));
 	expression->factor = factor;
 	expression->leftExpression = NULL;
 	expression->rightExpression = NULL;
@@ -102,7 +102,7 @@ Expression * FactorExpressionSemanticAction(Factor * factor) {
 
 Factor * ConstantFactorSemanticAction(Constant * constant) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
+	Factor * factor = malloc(sizeof(Factor));
 	factor->constant = constant;
 	factor->expression = NULL;
 	factor->varName = NULL;
@@ -320,6 +320,7 @@ Declaration *IntegerDeclarationWithAssignmentSemanticAction(char *varName, Expre
 	Declaration * new = malloc(sizeof(Declaration));
 	new->varName = varName;
 	new->assignment = assignment;
+	new->type = varType;
 	return new;
 }
 
