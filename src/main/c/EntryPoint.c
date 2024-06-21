@@ -56,6 +56,7 @@ const int main(const int count, const char ** arguments) {
 	}
 
 	logDebugging(logger, "Releasing modules resources...");
+	symbolTableDestroy();
 	shutdownGeneratorModule();
 	shutdownCalculatorModule();
 	shutdownAbstractSyntaxTreeModule();

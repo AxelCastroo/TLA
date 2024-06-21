@@ -297,6 +297,7 @@ Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 }
 
 Token DeclarationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
     char * varName = (char*) malloc(lexicalAnalyzerContext->length + 1);
     strncpy(varName, lexicalAnalyzerContext->lexeme, lexicalAnalyzerContext->length);
     varName[lexicalAnalyzerContext->length-1] = '\0';

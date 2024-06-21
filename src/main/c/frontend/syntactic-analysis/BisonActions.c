@@ -82,7 +82,7 @@ Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Exp
 		AddUsedSymbol(rightExpression->factor->varName, factorType);
 	}
 
-	Expression * expression = calloc(1, sizeof(Expression));
+	Expression * expression = malloc(sizeof(Expression));
 	expression->leftExpression = leftExpression;
 	expression->rightExpression = rightExpression;
 	expression->type = type;
@@ -112,7 +112,7 @@ Factor * ConstantFactorSemanticAction(Constant * constant) {
 
 Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
+	Factor * factor = malloc(sizeof(Factor));
 	factor->expression = expression;
 	factor->constant = NULL;
 	factor->varName = NULL;
@@ -122,7 +122,7 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 
 Factor * DeclarationFactorSemanticAction(char * varName) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
+	Factor * factor = malloc(sizeof(Factor));
 	factor->varName = varName;
 	factor->expression = NULL;
 	factor->constant = NULL;
@@ -132,7 +132,10 @@ Factor * DeclarationFactorSemanticAction(char * varName) {
 
 Program * ProgramSemanticAction(CompilerState * compilerState, StatementList statementList) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Program * program = calloc(1, sizeof(Program));
+	validateUsedSymbols();
+	free(usedSymbols);
+	free(usedSymbolsExpectedType);
+	Program * program = malloc(sizeof(Program));
 	program->statements = statementList;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
@@ -245,6 +248,7 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 		exit(1);
 	}
 
+	//muere aca
 	if(expression != NULL && getExpressionType(expression) != value.type){
 		logError(_logger, "Expression cannot be assigned to %s", varName);
 		exit(1);
@@ -396,7 +400,7 @@ static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool h
 	};
 
 	if(symbolTableFind(&key, NULL)){
-		logError(_logger, "Invalid redeclaration of varaible %s", varname);
+		logError(_logger, "Invalid redeclaration of variable");
 		exit(1);
 	}
 
@@ -435,7 +439,7 @@ static int getExpressionType(Expression *expression){
 		case OR_EXP:	
 			return (getExpressionType(expression->leftExpression) == BOOL_VAR && getExpressionType(expression->rightExpression) == BOOL_VAR) ? BOOL_VAR : -1;
 		case NOT_EXP:
-			return (getExpressionType(expression->leftExpression) == BOOL_VAR) ? BOOL_VAR : -1;
+			return getExpressionType(expression->leftExpression) == BOOL_VAR ? BOOL_VAR : -1;
 		case EQUAL_EXP:
 		case NOT_EQUAL_EXP:
 		case LESS_EQUAL_EXP:
@@ -492,4 +496,25 @@ static void AddUsedSymbol(char *varname, VarType expectedType){
     usedSymbolsExpectedType[usedSymbolsCount++] = expectedType;
 
     printf("Added %s\n", usedSymbols[usedSymbolsCount - 1].varname);
+}
+
+static void validateUsedSymbols() {
+    for (int i = 0; i < usedSymbolsCount; i++) {
+        struct key key = usedSymbols[i];
+        struct value value;
+        if (!symbolTableFind(&key, &value)) {
+            logError(_logger, "Variable %s undeclared", key.varname);
+            exit(1);
+        }
+
+        if (value.metadata.hasValue == false) {
+            logError(_logger, "Variable %s has no value", key.varname);
+            exit(1);
+        }
+
+        if (value.type != usedSymbolsExpectedType[i]) {
+            logError(_logger, "Variable %s is not of type %d", key.varname, usedSymbolsExpectedType[i]);
+            exit(1);
+        }
+    }
 }
