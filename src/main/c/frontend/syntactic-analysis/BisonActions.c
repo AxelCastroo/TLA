@@ -107,7 +107,6 @@ Factor * ConstantFactorSemanticAction(Constant * constant) {
 	factor->expression = NULL;
 	factor->varName = NULL;
 	factor->type = CONSTANT_FACTOR;
-	printf("%d", factor->constant->intValue);
 	return factor;
 }
 

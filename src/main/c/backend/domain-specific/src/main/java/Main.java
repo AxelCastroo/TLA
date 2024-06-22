@@ -16,7 +16,7 @@ public class Main {
         tree.insert(5);
 
         }
-        else {
+         else {
         tree.remove(4);
 
         }

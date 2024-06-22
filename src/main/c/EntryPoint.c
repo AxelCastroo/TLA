@@ -41,12 +41,17 @@ const int main(const int count, const char ** arguments) {
 		// ComputationResult computationResult = computeExpression(program->expression);
 		// if (computationResult.succeed) {
 		// 	compilerState.value = computationResult.value;
-			FILE * file = fopen("./src/main/c/backend/domain-specific/Main.java", "w");
-                SetOutputFile(file);
+			FILE * file = fopen("./src/main/c/backend/domain-specific/src/main/java/Main.java", "w");
+            SetOutputFile(file);
 
-				generate(&compilerState);
+			generate(&compilerState);
 
-                fclose(file);
+            fclose(file);
+
+			// system("mvn -f ./src/main/c/backend/domain-specific/pom.xml clean compile");
+                
+            // // Run the generated file
+            // system("mvn -f ./src/main/c/backend/domain-specific/pom.xml exec:java -Dexec.mainClass=\"Main\"");
 
 		// }
 		// else {
