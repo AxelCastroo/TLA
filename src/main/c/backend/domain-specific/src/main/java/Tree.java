@@ -57,6 +57,25 @@ public abstract class Tree<T extends Comparable<? super T>> implements Iterable<
         return heightFromNode(root);
     }
 
+    public int depth(T value) {
+        int aux = depthFromNode(root, value, 0);
+        System.out.println(aux);
+        return aux;
+    }
+
+    private int depthFromNode(Node<T> node, T value, int currentDepth) {
+        if (node == null) {
+            return -1; // Value not found
+        }
+        if (node.getData().equals(value)) {
+            return currentDepth;
+        } else if (node.getData().compareTo(value) > 0) {
+            return depthFromNode(node.getLeft(), value, currentDepth + 1);
+        } else {
+            return depthFromNode(node.getRight(), value, currentDepth + 1);
+        }
+    }
+
     // ===== For drawing =====
 
     public void visualize() throws IOException {
