@@ -300,7 +300,7 @@ Token DeclarationLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
     char * varName = (char*) malloc(lexicalAnalyzerContext->length + 1);
     strncpy(varName, lexicalAnalyzerContext->lexeme, lexicalAnalyzerContext->length);
-    varName[lexicalAnalyzerContext->length-1] = '\0';
+    varName[lexicalAnalyzerContext->length] = '\0';
 	lexicalAnalyzerContext->semanticValue->varname = varName;
     return DECLARATION;
 }

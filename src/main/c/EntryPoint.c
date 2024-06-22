@@ -41,7 +41,7 @@ const int main(const int count, const char ** arguments) {
 		// ComputationResult computationResult = computeExpression(program->expression);
 		// if (computationResult.succeed) {
 		// 	compilerState.value = computationResult.value;
-		// 	generate(&compilerState);
+			generate(&compilerState);
 		// }
 		// else {
 		// 	logError(logger, "The computation phase rejects the input program.");
