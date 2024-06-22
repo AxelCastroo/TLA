@@ -33,10 +33,8 @@ typedef enum {
 } ConstantType;
 
 typedef struct {
-	union {
 		int intValue;
     	bool boolValue;
-	};
 	ConstantType type;
 } Constant;
 
@@ -53,11 +51,9 @@ typedef struct {
 } Declaration;
 
 struct Factor {
-	union {
 		Constant * constant;
 		Expression * expression;
 		Declaration * declaration;
-	};
 	FactorType type;
 	char * varName;
 };
@@ -81,13 +77,11 @@ enum ExpressionType {
 };
 
 struct Expression {
-	union {
 		Factor * factor;
 		struct {
 			Expression * leftExpression;
 			Expression * rightExpression;
 		};
-	};
 	ExpressionType type;
 };
 
@@ -175,14 +169,12 @@ typedef enum {
 } StatementType;
 
 typedef struct {
-	union {
 		IfStatement * ifStatement;
 		ForStatement * forStatement;
 		FunctionCall * functionCall;
 		Declaration * declaration;
 		Assignment * assignment;
 		IterateStatement * iterateStatement;
-	};
 	StatementType type;
 } Statement;
 

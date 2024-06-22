@@ -60,10 +60,10 @@ Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Exp
 
 	VarType leftType, rightType;
 
-	// if(leftExpression != NULL && rightExpression != NULL && (leftType = getExpressionType(leftExpression)) != (rightType = getExpressionType(rightExpression))){
-	// 	logError(_logger, "Incompatible parameters");
-	// 	exit(1);
-	// }
+	if(leftExpression != NULL && rightExpression != NULL && (leftType = getExpressionType(leftExpression)) != (rightType = getExpressionType(rightExpression))){
+		logError(_logger, "Incompatible parameters");
+		exit(1);
+	}
 
 	VarType factorType;
 
@@ -107,6 +107,7 @@ Factor * ConstantFactorSemanticAction(Constant * constant) {
 	factor->expression = NULL;
 	factor->varName = NULL;
 	factor->type = CONSTANT_FACTOR;
+	printf("%d", factor->constant->intValue);
 	return factor;
 }
 
@@ -175,10 +176,10 @@ Statement * StatementSemanticAction(void *statement, StatementType type) {
 IfStatement *IfStatementSemanticAction(Expression *cond, Block *if_block, Block *else_block) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 
-	// if(getExpressionType(cond) != BOOL_VAR){
-	// 	logError(_logger, "Condition must be a boolean expression");
-	// 	exit(1);
-	// }
+	if(getExpressionType(cond) != BOOL_VAR){
+		logError(_logger, "Condition must be a boolean expression");
+		exit(1);
+	}
 
     IfStatementType type = IF_ELSE_TYPE;
     if (else_block == NULL) {
@@ -206,10 +207,10 @@ ForStatement *ForStatementSemanticAction(char *varName, RangeExpression *range, 
 RangeExpression *RangeExpressionSemanticAction(Expression *start, Expression *end) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);	
 
-	// if((start != NULL && getExpressionType(start) != INT_VAR) || (end && getExpressionType(end) != INT_VAR)){
-	// 	logError(_logger, "Invalid parameters type");
-	// 	exit(1);
-	// }
+	if((start != NULL && getExpressionType(start) != INT_VAR) || (end && getExpressionType(end) != INT_VAR)){
+		logError(_logger, "Invalid parameters type");
+		exit(1);
+	}
 
 	RangeExpression * new = malloc(sizeof(RangeExpression));
 	new->expressionLeft = start;
@@ -243,16 +244,16 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 		exit(1);
 	}
 
-	// if(functionCall != NULL && getFunctionCallType(functionCall) != value.type){
-	// 	logError(_logger, "Function return cannot be assigned to %s", varName);
-	// 	exit(1);
-	// }
+	if(functionCall != NULL && getFunctionCallType(functionCall) != value.type){
+		logError(_logger, "Function return cannot be assigned to %s", varName);
+		exit(1);
+	}
 
 	//muere aca
-	// if(expression != NULL && getExpressionType(expression) != value.type){
-	// 	logError(_logger, "Expression cannot be assigned to %s", varName);
-	// 	exit(1);
-	// }
+	if(expression != NULL && getExpressionType(expression) != value.type){
+		logError(_logger, "Expression cannot be assigned to %s", varName);
+		exit(1);
+	}
 
 	value.metadata.hasValue = true;
 	symbolTableInsert(&key, &value);
@@ -280,15 +281,15 @@ Declaration *BooleanDeclarationWithAssignmentSemanticAction(char *varName, Expre
 
 	VarType varType = SymbolTableDeclareAux(varName, BOOL_DECLARATION, true);
 
-	// if(functionCall != NULL && getFunctionCallType(functionCall) != BOOL_VAR){
-	// 	logError(_logger, "Function can not be assigned to %s", varName);
-	// 	exit(1);	
-	// }
+	if(functionCall != NULL && getFunctionCallType(functionCall) != BOOL_VAR){
+		logError(_logger, "Function can not be assigned to %s", varName);
+		exit(1);	
+	}
 
-	// if(expression != NULL && getExpressionType(expression) != BOOL_VAR){
-	// 	logError(_logger, "Expression can not be assigned to %s", varName);
-	// 	exit(1);
-	// }
+	if(expression != NULL && getExpressionType(expression) != BOOL_VAR){
+		logError(_logger, "Expression can not be assigned to %s", varName);
+		exit(1);
+	}
 
 	Assignment * assignment = malloc(sizeof(Assignment));
 	assignment->varName = varName;
@@ -306,15 +307,15 @@ Declaration *IntegerDeclarationWithAssignmentSemanticAction(char *varName, Expre
 
 	VarType varType = SymbolTableDeclareAux(varName, INT_DECLARATION, true);
 
-	// if(functionCall != NULL && getFunctionCallType(functionCall) != INT_VAR){
-	// 	logError(_logger, "Function can not be assigned to %s", varName);
-	// 	exit(1);
-	// }
+	if(functionCall != NULL && getFunctionCallType(functionCall) != INT_VAR){
+		logError(_logger, "Function can not be assigned to %s", varName);
+		exit(1);
+	}
 
-	// if(expression != NULL && getExpressionType(expression) != INT_VAR){
-	// 	logError(_logger, "Expression can not be assigned to %s", varName);
-	// 	exit(1);
-	// }
+	if(expression != NULL && getExpressionType(expression) != INT_VAR){
+		logError(_logger, "Expression can not be assigned to %s", varName);
+		exit(1);
+	}
 
 	Assignment * assignment = malloc(sizeof(Assignment));
 	assignment->varName = varName;

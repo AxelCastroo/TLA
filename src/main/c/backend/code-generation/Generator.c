@@ -173,7 +173,6 @@ static void _generateProgram(Program * program) {
     _output(0, "public class Main {\n");
     _output(1, "public static void main(String[] args) throws IOException{\n");
     _generateStatementList(program->statements);
-    _generateEpilogue();
 }
 
 /** 
@@ -205,7 +204,7 @@ static void _generateDeclaration(const unsigned int indentationLevel, Declaratio
     case INT_DECLARATION:
         _output(indentationLevel, "int ");
         if (declaration->assignment != NULL){
-            _generateAssignment(indentationLevel, declaration->assignment);
+            _generateAssignment(0, declaration->assignment);
             _output(indentationLevel, ";\n");
         }
         else {
