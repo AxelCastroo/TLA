@@ -238,8 +238,8 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 		exit(1);
 	}
 
-	if(value.type != INT_VAR && value.type != BOOL_VAR){
-		logError(_logger, "Variable %s is not a defined data type", varName);
+	if(value.type != INT_VAR && value.type != BOOL_VAR && value.type != EXP_VAR){
+		logError(_logger, "Variable %s is not an integer or boolean data type", varName);
 		exit(1);
 	}
 
@@ -249,7 +249,7 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 	}
 
 	//muere aca
-	if(expression != NULL && getExpressionType(expression) != value.type){
+	if(expression != NULL && getExpressionType(expression) != value.type && value.type != EXP_VAR){
 		logError(_logger, "Expression cannot be assigned to %s", varName);
 		exit(1);
 	}
@@ -347,7 +347,11 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
         exit(1);
     } else {
 		if (value.type == EXP_VAR && type != CALCULATE_CALL){
-			logError(_logger, "Variable %s is not a tree type", varName);
+			logError(_logger, "Variable %s is not a valid tree type", varName);
+        	exit(1);
+		}
+		if (value.type != EXP_VAR && type == CALCULATE_CALL){
+			logError(_logger, "Variable %s is not an expression tree type", varName);
         	exit(1);
 		}
 	}

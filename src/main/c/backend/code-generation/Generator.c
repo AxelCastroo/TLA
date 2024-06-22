@@ -210,7 +210,9 @@ static void _generateDeclaration(const unsigned int indentationLevel, Declaratio
     case BST_DECLARATION:
         _output(indentationLevel, "Tree<Integer> %s = new BST<>();\n", declaration->varName);
         break;
-    // EXP_DECLARATION!!
+    case EXP_DECLARATION:
+        _output(indentationLevel, "Tree<Integer> %s = new EXPTree<>(); \n", declaration->varName);
+        break;
     case INT_DECLARATION:
         _output(indentationLevel, "int ");
         if (declaration->assignment != NULL){
@@ -398,16 +400,16 @@ static void _generateFunctionCall(const unsigned int indentationLevel, FunctionC
         case VISUALIZE_CALL:
             _output(0, "visualize()");
             break;
-        case ADD_CALL:
-            _output(indentationLevel, "add(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
-           break;
-		 case SUB_CALL:
-            _output(indentationLevel, "sub(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
-            break;
+        // case ADD_CALL:
+        //     _output(indentationLevel, "add(");
+        //     _generateExpression(indentationLevel, functionCall->expression);
+        //     _output(indentationLevel, ")");
+        //    break;
+		//  case SUB_CALL:
+        //     _output(indentationLevel, "sub(");
+        //     _generateExpression(indentationLevel, functionCall->expression);
+        //     _output(indentationLevel, ")");
+        //     break;
         default:
             logError(_logger, "Unknown function call type: %d", functionCall->type);
             break;

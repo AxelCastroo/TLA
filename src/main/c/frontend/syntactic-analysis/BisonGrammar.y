@@ -175,7 +175,7 @@ function_call: DECLARATION[dec] INSERT expression[exp]				{ $$ = FunctionCallSem
 	| DECLARATION[dec] INCLUDES expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, INCLUDES_CALL); }
 	| DECLARATION[dec] HEIGHT 										{ $$ = FunctionCallSemanticAction($dec, NULL, HEIGHT_CALL); }
 	| DECLARATION[dec] DEPTH expression[exp]						{ $$ = FunctionCallSemanticAction($dec, $exp, DEPTH_CALL); }
-	| DECLARATION[dec] CALCULATE									{ $$ = FunctionCallSemanticAction($dec, NULL, CALCULATE_CALL); }	
+	| DECLARATION[dec] CALCULATE expression[exp]					{ $$ = FunctionCallSemanticAction($dec, $exp, CALCULATE_CALL); }	
 	| DECLARATION[dec] VISUALIZE									{ $$ = FunctionCallSemanticAction($dec, NULL, VISUALIZE_CALL); }
 	/* | DECLARATION[dec] ADD DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, ADD_CALL); }
 	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, SUB_CALL); } */
@@ -188,7 +188,7 @@ iterator_statement: DECLARATION[dec] ITERATE IN_ORDER[order]		{ $$ = IterateSema
 
 declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticAction($dec, RBT_DECLARATION); }
 	| BINARY_SEARCH_TREE DECLARATION[dec]							{ $$ = DeclarationSemanticAction($dec, BST_DECLARATION); }
-	/* | EXPRESSION_TREE DECLARATION[dec] expression[exp]				{ $$ = DeclarationWithAssignmentSemanticAction($dec, EXP_DECLARATION, $exp, NULL); } */
+	| EXPRESSION_TREE DECLARATION[dec]								{ $$ = DeclarationSemanticAction($dec, EXP_DECLARATION); }
 	| AVL_TREE DECLARATION[dec]										{ $$ = DeclarationSemanticAction($dec, AVL_DECLARATION); }
 	| INT_TYPE DECLARATION[dec] 									{ $$ = DeclarationSemanticAction($dec, INT_DECLARATION); }		
 	| BOOLEAN_TYPE DECLARATION[dec]									{ $$ = DeclarationSemanticAction($dec, BOOL_DECLARATION); }
