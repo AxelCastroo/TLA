@@ -1,8 +1,6 @@
-EXPTree tree 1 + (44 / 43) * 2
-tree calculate
+EXPTree tree
+tree calculate 1 * 2 - 22
 
-EXPTree tree2 1 
-tree2 calculate
+EXPTree tree2 
+tree2 calculate 20 / 222
 
-EXPTree tree3 1 - 822828
-tree3 calculate
