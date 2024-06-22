@@ -19,6 +19,8 @@ void shutdownGeneratorModule();
  */
 void generate(CompilerState * compilerState);
 
+void SetOutputFile(FILE *file);
+
 /** PRIVATE FUNCTIONS */
 static const char _expressionTypeToCharacter(const ExpressionType type);
 static void _generateConstant(const unsigned int indentationLevel, Constant * constant);

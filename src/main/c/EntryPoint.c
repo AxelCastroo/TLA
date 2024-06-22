@@ -41,7 +41,13 @@ const int main(const int count, const char ** arguments) {
 		// ComputationResult computationResult = computeExpression(program->expression);
 		// if (computationResult.succeed) {
 		// 	compilerState.value = computationResult.value;
-			generate(&compilerState);
+			FILE * file = fopen("./src/main/c/backend/domain-specific/Main.java", "w");
+                SetOutputFile(file);
+
+				generate(&compilerState);
+
+                fclose(file);
+
 		// }
 		// else {
 		// 	logError(logger, "The computation phase rejects the input program.");

@@ -270,7 +270,7 @@ static void _output(const unsigned int indentationLevel, const char * const form
     va_start(arguments, format);
     char * indentation = _indentation(indentationLevel);
     char * effectiveFormat = concatenate(2, indentation, format);
-    vfprintf(stdout, effectiveFormat, arguments);
+    vfprintf(outputFile, effectiveFormat, arguments);
     free(effectiveFormat);
     free(indentation);
     va_end(arguments);
