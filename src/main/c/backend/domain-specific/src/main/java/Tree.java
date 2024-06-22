@@ -8,7 +8,6 @@ import guru.nidi.graphviz.model.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.function.Function;
@@ -111,31 +110,19 @@ public abstract class Tree<T extends Comparable<? super T>> implements Iterable<
             node.setFillColor(Color.GREEN);
     }
 
-    public void inorder() throws IOException {
-        File file = new File(TRAVERSAL_DIR + "inorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
-        PrintWriter writer = new PrintWriter(file);
-
-        getInorderFromNode(root, writer);
-        writer.close();
-        TRAVERSAL_FILE_COUNTER++;
+    public void inorder() {
+        getInorderFromNode(root);
+        System.out.println();
     }
 
-    public void preorder() throws IOException {
-        File file = new File(TRAVERSAL_DIR + "preorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
-        PrintWriter writer = new PrintWriter(file);
-
-        getPreorderFromNode(root, writer);
-        writer.close();
-        TRAVERSAL_FILE_COUNTER++;
+    public void preorder() {
+        getPreorderFromNode(root);
+        System.out.println();
     }
 
-    public void postorder() throws IOException {
-        File file = new File(TRAVERSAL_DIR + "postorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
-        PrintWriter writer = new PrintWriter(file);
-
-        getPostorderFromNode(root, writer);
-        writer.close();
-        TRAVERSAL_FILE_COUNTER++;
+    public void postorder() {
+        getPostorderFromNode(root);
+        System.out.println();
     }
 
     @Override
@@ -157,27 +144,27 @@ public abstract class Tree<T extends Comparable<? super T>> implements Iterable<
     // A utility function to print preorder traversal of
     // the tree. The function also prints height of every
     // node
-    private void getPreorderFromNode(Node<T> node, PrintWriter writer) {
+    private void getPreorderFromNode(Node<T> node) {
         if (node != null) {
-            writer.print(node.getData() + " ");
-            getPreorderFromNode(node.getLeft(), writer);
-            getPreorderFromNode(node.getRight(), writer);
+            System.out.print(node.getData() + " ");
+            getPreorderFromNode(node.getLeft());
+            getPreorderFromNode(node.getRight());
         }
     }
 
-    private void getPostorderFromNode(Node<T> currentNode, PrintWriter writer) {
+    private void getPostorderFromNode(Node<T> currentNode) {
         if (currentNode != null) {
-            getPostorderFromNode(currentNode.getLeft(), writer);
-            getPostorderFromNode(currentNode.getRight(), writer);
-            writer.print(currentNode.getData() + " ");
+            getPostorderFromNode(currentNode.getLeft());
+            getPostorderFromNode(currentNode.getRight());
+            System.out.print(currentNode.getData() + " ");
         }
     }
 
-    private void getInorderFromNode(Node<T> currentNode, PrintWriter writer) {
+    private void getInorderFromNode(Node<T> currentNode) {
         if (currentNode != null) {
-            getInorderFromNode(currentNode.getLeft(), writer);
-            writer.print(currentNode.getData() + " ");
-            getInorderFromNode(currentNode.getRight(), writer);
+            getInorderFromNode(currentNode.getLeft());
+            System.out.print(currentNode.getData() + " ");
+            getInorderFromNode(currentNode.getRight());
         }
     }
 

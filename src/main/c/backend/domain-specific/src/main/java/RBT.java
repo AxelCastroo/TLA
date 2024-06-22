@@ -289,20 +289,23 @@ public class RBT<T extends Comparable<? super T>> extends Tree<T> {
 
     // Pre-Order traversal
     // Node.Left Subtree.Right Subtree
-    public void preorder() {
+     public void preorder() {
         preOrderHelper(this.root);
+        System.out.println();
     }
 
     // In-Order traversal
     // Left Subtree . Node . Right Subtree
     public void inorder() {
         inOrderHelper(this.root);
+        System.out.println();
     }
 
     // Post-Order traversal
     // Left Subtree . Right Subtree . Node
     public void postorder() {
         postOrderHelper(this.root);
+        System.out.println();
     }
 
     @Override
