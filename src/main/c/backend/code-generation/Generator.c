@@ -4,6 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdarg.h>
+
+static FILE *outputFile;
+
+void SetOutputFile(FILE *file) {
+    outputFile = file;
+}
+
 
 /* MODULE INTERNAL STATE */
 const char _indentationCharacter = ' ';
