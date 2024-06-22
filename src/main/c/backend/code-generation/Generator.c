@@ -211,7 +211,7 @@ static void _generateDeclaration(const unsigned int indentationLevel, Declaratio
         _output(indentationLevel, "Tree<Integer> %s = new BST<>();\n", declaration->varName);
         break;
     case EXP_DECLARATION:
-        _output(indentationLevel, "Tree<Integer> %s = new EXPTree<>(); \n", declaration->varName);
+        _output(indentationLevel, "EXP<String> %s = new EXP<>(); \n", declaration->varName);
         break;
     case INT_DECLARATION:
         _output(indentationLevel, "int ");
@@ -393,9 +393,9 @@ static void _generateFunctionCall(const unsigned int indentationLevel, FunctionC
             _output(0, ")");
             break;
         case CALCULATE_CALL:
-            _output(0, "calculate(");
-            _generateExpression(0, functionCall->expression);
-            _output(0, ")");
+            _output(0, "calculate(\"");
+            _generateExpression(1, functionCall->expression);
+            _output(0, "\")");
             break;
         case VISUALIZE_CALL:
             _output(0, "visualize()");

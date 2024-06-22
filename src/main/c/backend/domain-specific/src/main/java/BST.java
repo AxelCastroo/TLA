@@ -2,101 +2,95 @@ import java.util.function.Function;
 
 public class BST<T extends Comparable<? super T>> extends Tree<T> {
 
+    public BST() {
+        this.root = null;
+    }
+
+    public BST(Node<T> root) {
+        this.root = root;
+    }
+
     @Override
     public void insert(T element) {
-        root = insert(root, element);
+        root = recursiveAddNode(root, element);
     }
 
     @Override
     public void remove(T element) {
-        root = deleteNode(root, element);
-    }
-
-    @Override
-    public T max() {
-        if (root == null) {
-            return null;
-        }
-        return maxValueNode(root).getData();
+        root = recursiveDeleteNode(root, element);
     }
 
     @Override
     public T min() {
-        if (root == null) {
-            return null;
-        }
-        return minValueNode(root).getData();
+        return minValue(root);
+    }
+
+    @Override
+    public T max() {
+        return maxValue(root);
     }
 
     @Override
     <E extends Comparable<? super E>> Tree<E> reduce(Function<T, E> function) {
         Tree<E> tree = new BST<>();
+
         for (Node<T> element : this) {
             if (element.getData() != null) {
                 tree.insert(function.apply(element.getData()));
             }
         }
+
         return tree;
     }
 
-    private Node<T> insert(Node<T> node, T element) {
+    private Node<T> recursiveAddNode(Node<T> node, T data) {
         if (node == null) {
-            return new Node<>(element);
+            node = new Node<T>(data);
+            return node;
         }
-
-        if (element.compareTo(node.getData()) < 0) {
-            node.setLeft(insert(node.getLeft(), element));
-            node.getLeft().setParent(node);
-        } else if (element.compareTo(node.getData()) > 0) {
-            node.setRight(insert(node.getRight(), element));
-            node.getRight().setParent(node);
+        if (data.compareTo(node.getData()) < 0) {
+            node.setLeft(recursiveAddNode(node.getLeft(), data));
+        } else if (data.compareTo(node.getData()) > 0) {
+            node.setRight(recursiveAddNode(node.getRight(), data));
+        } else {
+            return node;
         }
-
         return node;
     }
 
-    private Node<T> minValueNode(Node<T> node) {
-        Node<T> current = node;
-        while (current.getLeft() != null) {
-            current = current.getLeft();
-        }
-        return current;
-    }
-
-    private Node<T> maxValueNode(Node<T> node) {
-        Node<T> current = node;
-        while (current.getRight() != null) {
-            current = current.getRight();
-        }
-        return current;
-    }
-
-    private Node<T> deleteNode(Node<T> root, T element) {
-        if (root == null) {
+    private Node<T> recursiveDeleteNode(Node<T> root, T data) {
+        if (root == null)
             return null;
+        if (data.compareTo(root.getData()) < 0)
+            root.setLeft(recursiveDeleteNode(root.getLeft(), data));
+        else if (data.compareTo(root.getData()) > 0)
+            root.setRight(recursiveDeleteNode(root.getRight(), data));
+        else {
+            if (root.getLeft() == null)
+                return root.getRight();
+            else if (root.getRight() == null)
+                return root.getLeft();
+            root.setData(minValue(root.getRight()));
+            root.setRight(recursiveDeleteNode(root.getRight(), data));
         }
-
-        if (element.compareTo(root.getData()) < 0) {
-            root.setLeft(deleteNode(root.getLeft(), element));
-        } else if (element.compareTo(root.getData()) > 0) {
-            root.setRight(deleteNode(root.getRight(), element));
-        } else {
-            if ((root.getLeft() == null) || (root.getRight() == null)) {
-                Node<T> temp = (root.getLeft() != null) ? root.getLeft() : root.getRight();
-
-                if (temp == null) {
-                    temp = root;
-                    root = null;
-                } else {
-                    root = temp;
-                }
-            } else {
-                Node<T> temp = minValueNode(root.getRight());
-                root.setData(temp.getData());
-                root.setRight(deleteNode(root.getRight(), temp.getData()));
-            }
-        }
-
         return root;
+    }
+
+    private T minValue(Node<T> root) {
+        T minval = root.getData();
+        while (root.getLeft() != null) {
+            minval = root.getLeft().getData();
+            root = root.getLeft();
+        }
+        return minval;
+    }
+
+    private T maxValue(Node<T> root) {
+        T maxval = root.getData();
+        while (root.getRight() != null) {
+            maxval = root.getRight().getData();
+            root = root.getRight();
+        }
+        return maxval;
     }
 }

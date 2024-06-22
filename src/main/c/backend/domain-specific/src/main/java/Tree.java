@@ -5,12 +5,12 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.*;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Stack;
 import java.util.function.Function;
 
 import static guru.nidi.graphviz.model.Factory.*;
@@ -33,44 +33,32 @@ public abstract class Tree<T extends Comparable<? super T>> implements Iterable<
 
     abstract void remove(T element);
 
-  public boolean includes(T element) {
-    return contains(root, element);
-}
+    abstract <E extends Comparable<? super E>> Tree<E> reduce(Function<T, E> function);
 
-private boolean contains(Node<T> node, T element) {
-    return findNode(node, element) != null;
-}
+    public void addTree(Tree<T> tree) {
+        for (Node<T> element : tree) {
+            if(element.getData() != null)
+                this.insert(element.getData());
+        }
+    }
+
+    abstract T max();
+
+    abstract T min();
+
+    public Node<T> root() {
+        return root;
+    }
+
+    public void printRoot() {
+        System.out.println(root.getData());
+    }
 
     public int height() {
         return heightFromNode(root);
     }
 
-  protected int heightFromNode(Node<T> node) {
-        if (node == null) {
-            return 0;
-        }
-        return node.getHeight();
-    }
-
-     public int depth(T element) {
-        return calculateDepth(root, element, 0);
-    }
-
-    private int calculateDepth(Node<T> node, T element, int depth) {
-        if (node == null) {
-            return -1; // Element not found
-        }
-        if (node.getData().equals(element)) {
-            return depth; // Found the element
-        } else if (node.getData().compareTo(element) > 0) {
-            return calculateDepth(node.getLeft(), element, depth + 1);
-        } else {
-            return calculateDepth(node.getRight(), element, depth + 1);
-        }
-    }
-
-
-    abstract T calculate();
+    // ===== For drawing =====
 
     public void visualize() throws IOException {
         graph = mutGraph("tree").setDirected(true);
@@ -104,6 +92,11 @@ private boolean contains(Node<T> node, T element) {
                         mutNode.addLink(invisibleLink);
                     }
                 }
+
+                mutNode.add(Attributes.attr("fillcolor", colorName(node.getFillColor())));
+                mutNode.add(Attributes.attr("color", colorName(node.getBorderColor())));
+                mutNode.add(Style.FILLED);
+
                 graph.add(mutNode);
             }
         }
@@ -112,25 +105,16 @@ private boolean contains(Node<T> node, T element) {
         DOT_FILE_COUNTER++;
     }
 
-    public void add(Tree<T> otherTree) {
-        for (Node<T> node : otherTree) {
-            if (node.getData() != null) {
-                this.insert(node.getData());
-            }
-        }
-    }
-
-    public void sub(Tree<T> otherTree) {
-        for (Node<T> node : otherTree) {
-            if (node.getData() != null) {
-                this.remove(node.getData());
-            }
-        }
+    public void find(T element){
+        Node<T> node = findNode(root, element);
+        if(node != null)
+            node.setFillColor(Color.GREEN);
     }
 
     public void inorder() throws IOException {
         File file = new File(TRAVERSAL_DIR + "inorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
         PrintWriter writer = new PrintWriter(file);
+
         getInorderFromNode(root, writer);
         writer.close();
         TRAVERSAL_FILE_COUNTER++;
@@ -139,7 +123,8 @@ private boolean contains(Node<T> node, T element) {
     public void preorder() throws IOException {
         File file = new File(TRAVERSAL_DIR + "preorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
         PrintWriter writer = new PrintWriter(file);
-        getPreorderFromNode(root, writer);  
+
+        getPreorderFromNode(root, writer);
         writer.close();
         TRAVERSAL_FILE_COUNTER++;
     }
@@ -147,6 +132,7 @@ private boolean contains(Node<T> node, T element) {
     public void postorder() throws IOException {
         File file = new File(TRAVERSAL_DIR + "postorder" + TRAVERSAL_FILE_COUNTER + TRAVERSAL_EXT);
         PrintWriter writer = new PrintWriter(file);
+
         getPostorderFromNode(root, writer);
         writer.close();
         TRAVERSAL_FILE_COUNTER++;
@@ -154,45 +140,23 @@ private boolean contains(Node<T> node, T element) {
 
     @Override
     public Iterator<Node<T>> iterator() {
-        return new InorderIterator(root);
+        return new BSTInorderIterator<>(root());
     }
 
-    private class InorderIterator implements Iterator<Node<T>> {
-        private Stack<Node<T>> stack = new Stack<>();
-
-        public InorderIterator(Node<T> root) {
-            pushLeft(root);
-        }
-
-        private void pushLeft(Node<T> node) {
-            while (node != null) {
-                stack.push(node);
-                node = node.getLeft();
-            }
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !stack.isEmpty();
-        }
-
-        @Override
-        public Node<T> next() {
-            if (!hasNext()) throw new NoSuchElementException();
-            Node<T> node = stack.pop();
-            pushLeft(node.getRight());
-            return node;
-        }
+    public boolean includes(T element) {
+        if (this.root == null)
+            return false;
+        else
+            return this.contains(this.root, element);
     }
 
-    private void getInorderFromNode(Node<T> currentNode, PrintWriter writer) {
-        if (currentNode != null) {
-            getInorderFromNode(currentNode.getLeft(), writer);
-            writer.print(currentNode.getData() + " ");
-            getInorderFromNode(currentNode.getRight(), writer);
-        }
+    private boolean contains(Node<T> node, T element) {
+        return findNode(node, element) != null;
     }
 
+    // A utility function to print preorder traversal of
+    // the tree. The function also prints height of every
+    // node
     private void getPreorderFromNode(Node<T> node, PrintWriter writer) {
         if (node != null) {
             writer.print(node.getData() + " ");
@@ -209,16 +173,46 @@ private boolean contains(Node<T> node, T element) {
         }
     }
 
-  private Node<T> findNode(Node<T> node, T element) {
-    while (node != null) {
-        int cmp = element.compareTo(node.getData());
-        if (cmp < 0) {
-            node = node.getLeft();
-        } else if (cmp > 0) {
-            node = node.getRight();
-        } else {
-            return node; // Found
+    private void getInorderFromNode(Node<T> currentNode, PrintWriter writer) {
+        if (currentNode != null) {
+            getInorderFromNode(currentNode.getLeft(), writer);
+            writer.print(currentNode.getData() + " ");
+            getInorderFromNode(currentNode.getRight(), writer);
         }
     }
-    return null; // Not found
-}}
+
+    private static String colorName(Color c) {
+        for (Field f : Color.class.getDeclaredFields()) {
+            //we want to test only fields of type Color
+            if (f.getType().equals(Color.class))
+                try {
+                    if (f.get(null).equals(c))
+                        return f.getName().toLowerCase();
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                    // shouldn't not be thrown, but just in case print its stacktrace
+                    e.printStackTrace();
+                }
+        }
+        return null;
+    }
+
+    private Node<T> findNode(Node<T> node, T element){
+        boolean found = false;
+        while (node != null && !found) {
+            if (node.getData().equals(element))
+                found = true;
+            else if (node.getData().compareTo(element) > 0)
+                node = node.getLeft();
+            else
+                node = node.getRight();
+        }
+        return node;
+    }
+
+    // A utility function to get height of the tree
+    protected int heightFromNode(Node<T> N) {
+        if (N == null)
+            return 0;
+        return N.getH();
+    }
+}

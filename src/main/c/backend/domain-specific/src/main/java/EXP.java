@@ -1,10 +1,10 @@
 import java.util.Stack;
+import java.util.function.Function;
 
-public class EXPTree {
+public class EXP <T extends Comparable<? super T>> extends Tree<T> {
     private Node<String> root;
 
-    public EXPTree(String expression) {
-        root = constructTree(expression);
+    public EXP() {
     }
 
     private Node<String> constructTree(String expression) {
@@ -26,7 +26,8 @@ public class EXPTree {
         return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
     }
 
-    public int calculate() {
+    public int calculate(String expression) {
+        root = constructTree(expression);
         return evaluate(root);
     }
 
@@ -54,5 +55,30 @@ public class EXPTree {
             default:
                 throw new IllegalArgumentException("Invalid operator: " + node.getData());
         }
+    }
+
+    @Override
+    void insert(T element) {
+
+    }
+
+    @Override
+    void remove(T element) {
+
+    }
+
+    @Override
+    <E extends Comparable<? super E>> Tree<E> reduce(Function<T, E> function) {
+        return null;
+    }
+
+    @Override
+    T max() {
+        return null;
+    }
+
+    @Override
+    T min() {
+        return null;
     }
 }

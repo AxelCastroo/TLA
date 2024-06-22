@@ -1,22 +1,34 @@
-public class Node<T extends Comparable<T>> {
+import java.awt.*;
+
+public class Node<T extends Comparable<? super T>> {
     private T data;
     private Node<T> left;
     private Node<T> right;
+    private int h; //altura en la que se encuentra el nodo
+    //Para el RBT
     private Node<T> parent;
-    private boolean color;
-    private int height;
+    private Color borderColor;
 
-    // Constructor
+    private Color fillColor;
+
     public Node(T data) {
         this.data = data;
+        this.borderColor = Color.BLACK;
+        this.fillColor = Color.WHITE;
         this.left = null;
         this.right = null;
-        this.parent = null;
-        this.color = true; // New nodes are red by default in Red-Black Tree
-        this.height = 1;   // Height is initially 1 for a new node
+        this.h = 0;
     }
 
-    // Getters and setters
+    public Node() {
+        this.data = null;
+        this.h = 0;
+        this.borderColor = Color.BLACK;
+        this.fillColor = Color.WHITE;
+        this.left = null;
+        this.right = null;
+    }
+
     public T getData() {
         return data;
     }
@@ -29,59 +41,52 @@ public class Node<T extends Comparable<T>> {
         return left;
     }
 
-    public void setLeft(Node<T> left) {
-        this.left = left;
-    }
 
     public Node<T> getRight() {
         return right;
-    }
-
-    public void setRight(Node<T> right) {
-        this.right = right;
     }
 
     public Node<T> getParent() {
         return parent;
     }
 
+    public void setLeft(Node<T> left) {
+        this.left = left;
+    }
+
+    public void setRight(Node<T> right) {
+        this.right = right;
+    }
+
     public void setParent(Node<T> parent) {
         this.parent = parent;
     }
 
-    public boolean getColor() {
-        return color;
+    public int getH() {
+        return h;
     }
 
-    public void setColor(boolean color) {
-        this.color = color;
-    }
-
-    public boolean isRed() {
-        return color == true;
-    }
-
-    public boolean isBlack() {
-        return color == false;
-    }
-
-    public void makeRed() {
-        this.color = true;
-    }
-
-    public void makeBlack() {
-        this.color = false;
+    public void setH(int h) {
+        this.h = h;
     }
 
     public boolean isLeaf() {
-        return (this.left == null && this.right == null);
+        return left == null && right == null;
     }
 
-    public int getHeight() {
-        return height;
+    public Color getBorderColor() {
+        return borderColor;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setBorderColor(Color color) {
+        this.borderColor = color;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
     }
 }
