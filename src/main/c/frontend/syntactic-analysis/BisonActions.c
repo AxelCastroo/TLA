@@ -348,7 +348,7 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
     return new;
 }
 
-IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block) {
+IterateStatement *IterateSemanticAction(char *varName, IteratorType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 
 	struct key key = {
@@ -365,10 +365,10 @@ IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block 
 		exit(1);
 	}
 
+
 	IterateStatement * new = malloc(sizeof(IterateStatement));
 	new->varName = varName;
 	new->type = type;
-	new->block = block;
 	return new;
 }
 

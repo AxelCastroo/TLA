@@ -208,19 +208,19 @@ Token ElseLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 
 Token InOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = IN_ORDER;
+	lexicalAnalyzerContext->semanticValue->token = INORDER;
 	return IN_ORDER;
 }
 
 Token PostOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = POST_ORDER;
+	lexicalAnalyzerContext->semanticValue->token = POSTORDER;
 	return POST_ORDER;
 }
 
 Token PreOrderIterationOrderLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = PRE_ORDER;
+	lexicalAnalyzerContext->semanticValue->token = PREORDER;
 	return PRE_ORDER;
 }
 

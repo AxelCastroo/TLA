@@ -42,6 +42,7 @@ static void _generateStatement(const unsigned int indentationLevel, Statement * 
 static void _generateBlock(const unsigned int indentationLevel, Block * block);
 static void _generateIfStatement(const unsigned int indentationLevel, IfStatement * ifStatement);
 static void _generateForStatement(const unsigned int indentationLevel, ForStatement * forStatement);
+static void _generateIterate(const unsigned int indentationLevel, IterateStatement * iterateStatement);
 static void _generateFunctionCall(const unsigned int indentationLevel, FunctionCall * functionCall);
 static void _generateDeclaration(const unsigned int indentationLevel, Declaration * declaration);
 static void _generateAssignment(const unsigned int indentationLevel, Assignment * assignment);
@@ -297,10 +298,32 @@ static void _generateStatement(const unsigned int indentationLevel, Statement * 
             _generateAssignment(indentationLevel, statement->assignment);
             _output(0, ";\n");
             break;
+        case ITERATE_STATEMENT:
+            _generateIterate(indentationLevel, statement->iterateStatement);
+            break;
         default:
             logError(_logger, "Unknown statement type: %d", statement->type);
             break;
     }
+}
+
+static void _generateIterate(const unsigned int indentationLevel, IterateStatement * iterateStatement){
+    _output(indentationLevel, "%s", iterateStatement->varName);
+    switch (iterateStatement->type){
+    case INORDER:
+        _output(0, ".inorder()");
+        break;
+    case POSTORDER:
+        _output(0, ".postorder()");
+        break;
+    case PREORDER:
+        _output(0, ".preorder()");
+        break;
+    default:
+        logError(_logger, "Unkwnon iterator type: %d", iterateStatement->type);
+        break;
+    }
+    _output(0, ";\n");
 }
 
 /**

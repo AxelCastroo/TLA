@@ -38,7 +38,7 @@ Declaration *DeclarationSemanticAction(char *varName, DeclarationType declaratio
 Declaration *IntegerDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
 Declaration *BooleanDeclarationWithAssignmentSemanticAction(char *varName, Expression *expression, FunctionCall *functionCall);
 FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, FunctionCallType type);
-IterateStatement *IterateSemanticAction(char *varName, IteratorType type, Block *block);
+IterateStatement *IterateSemanticAction(char *varName, IteratorType type);
 
 static VarType SymbolTableDeclareAux(char *varname, DeclarationType type, bool hasValue);
 static int getExpressionType(Expression *expression);

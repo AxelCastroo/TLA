@@ -181,9 +181,9 @@ function_call: DECLARATION[dec] INSERT expression[exp]				{ $$ = FunctionCallSem
 	| DECLARATION[dec] SUB DECLARATION								{ $$ = FunctionCallSemanticAction($dec, NULL, SUB_CALL); } */
 	;
 
-iterator_statement: ITERATE OPEN_PARENTHESIS DECLARATION[dec] IN_ORDER[order] CLOSE_PARENTHESIS block[bl]			{ $$ = IterateSemanticAction($dec, $order, $bl); }
-	| ITERATE OPEN_PARENTHESIS DECLARATION[dec] POST_ORDER[order] CLOSE_PARENTHESIS block[bl]						{ $$ = IterateSemanticAction($dec, $order, $bl); }
-	| ITERATE OPEN_PARENTHESIS DECLARATION[dec] PRE_ORDER[order] CLOSE_PARENTHESIS block[bl]						{ $$ = IterateSemanticAction($dec, $order, $bl); }
+iterator_statement: DECLARATION[dec] ITERATE IN_ORDER[order]		{ $$ = IterateSemanticAction($dec, $order); }
+	| DECLARATION[dec] ITERATE POST_ORDER[order]					{ $$ = IterateSemanticAction($dec, $order); }
+	| DECLARATION[dec] ITERATE PRE_ORDER[order] 					{ $$ = IterateSemanticAction($dec, $order); }
 	;
 
 declaration: RED_BLACK_TREE DECLARATION[dec]						{ $$ = DeclarationSemanticAction($dec, RBT_DECLARATION); }
