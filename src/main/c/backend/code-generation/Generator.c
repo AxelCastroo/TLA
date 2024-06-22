@@ -74,7 +74,8 @@ static void _generateConstant(const unsigned int indentationLevel, Constant * co
  * completes a valid Java program.
  */
 static void _generateEpilogue(void) {
-    _output(0, "}\n}\n");
+    _output(1, "}\n");
+    _output(0, "}\n");
 }
 
 /**
@@ -181,7 +182,7 @@ static void _generateProgram(Program * program) {
 static void _generateStatementList(StatementList statementList){
     StatementList current = statementList;
     while (current != NULL) {
-        _generateStatement(1, current->statement);
+        _generateStatement(2, current->statement);
         current = current->next;
     }
 }
@@ -205,20 +206,20 @@ static void _generateDeclaration(const unsigned int indentationLevel, Declaratio
         _output(indentationLevel, "int ");
         if (declaration->assignment != NULL){
             _generateAssignment(0, declaration->assignment);
-            _output(indentationLevel, ";\n");
+            _output(0, ";\n");
         }
         else {
-            _output(indentationLevel, "%s;\n", declaration->varName);
+            _output(0, "%s;\n", declaration->varName);
         }
         break;
     case BOOL_DECLARATION:
         _output(indentationLevel, "boolean ");
         if(declaration->assignment != NULL){
             _generateAssignment(indentationLevel, declaration->assignment);
-            _output(indentationLevel, ";\n");
+            _output(0, ";\n");
         }
         else {
-            _output(indentationLevel, "%s;\n", declaration->varName);
+            _output(0, "%s;\n", declaration->varName);
         }
         break;
     default:
@@ -232,10 +233,10 @@ static void _generateDeclaration(const unsigned int indentationLevel, Declaratio
 static void _generateAssignment(const unsigned int indentationLevel, Assignment * assignment){
     _output(indentationLevel, "%s = ", assignment->varName);
     if(assignment->expression != NULL){
-        _generateExpression(indentationLevel, assignment->expression);
+        _generateExpression(0, assignment->expression);
     }
     if(assignment->functionCall != NULL){
-        _generateFunctionCall(indentationLevel, assignment->functionCall);
+        _generateFunctionCall(0, assignment->functionCall);
     }
 }
 
@@ -286,7 +287,7 @@ static void _generateStatement(const unsigned int indentationLevel, Statement * 
             break;
         case ASSIGNMENT_STATEMENT:
             _generateAssignment(indentationLevel, statement->assignment);
-            _output(indentationLevel, ";\n");
+            _output(0, ";\n");
             break;
         default:
             logError(_logger, "Unknown statement type: %d", statement->type);
@@ -299,13 +300,13 @@ static void _generateStatement(const unsigned int indentationLevel, Statement * 
  */
 static void _generateIfStatement(const unsigned int indentationLevel, IfStatement * ifStatement) {
     _output(indentationLevel, "if (");
-    _generateExpression(indentationLevel, ifStatement->condition);
-    _output(indentationLevel, ") ");
-    _generateBlock(indentationLevel, ifStatement->blockIf);
+    _generateExpression(0, ifStatement->condition);
+    _output(0, ") ");
+    _generateBlock(0, ifStatement->blockIf);
 
     if (ifStatement->type == IF_ELSE_TYPE) {
-        _output(indentationLevel, " else ");
-        _generateBlock(indentationLevel, ifStatement->blockElse);
+        _output(2, " else ");
+        _generateBlock(0, ifStatement->blockElse);
     }
 }
 
@@ -314,17 +315,18 @@ static void _generateIfStatement(const unsigned int indentationLevel, IfStatemen
  */
 static void _generateForStatement(const unsigned int indentationLevel, ForStatement * forStatement) {
     _output(indentationLevel, "for (int %s = ", forStatement->varName);
-    _generateExpression(indentationLevel, forStatement->range->expressionLeft);
-    _output(indentationLevel, "; %s < ", forStatement->varName);
-    _generateExpression(indentationLevel, forStatement->range->expressionRight);
-    _output(indentationLevel, "; %s++) ", forStatement->varName);
-    _generateBlock(indentationLevel, forStatement->block);
+    _generateExpression(0, forStatement->range->expressionLeft);
+    _output(0, "; %s < ", forStatement->varName);
+    _generateExpression(0, forStatement->range->expressionRight);
+    _output(0, "; %s++) ", forStatement->varName);
+    _generateBlock(0, forStatement->block);
 }
 
 static void _generateBlock(const unsigned int indentationLevel, Block * block){
     _output(indentationLevel, "{\n");
     _generateStatementList(block->statements);
-    _output(indentationLevel, "{\n}");
+    _output(0, "\n");
+    _output(2, "}\n");
 }
 
 /**
@@ -335,35 +337,35 @@ static void _generateFunctionCall(const unsigned int indentationLevel, FunctionC
 
     switch (functionCall->type) {
         case INSERT_CALL:
-            _output(indentationLevel, "insert(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
+            _output(0, "insert(");
+            _generateExpression(0, functionCall->expression);
+            _output(0, ")");
             break;
         case REMOVE_CALL:
-            _output(indentationLevel, "remove(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
+            _output(0, "remove(");
+            _generateExpression(0, functionCall->expression);
+            _output(0, ")");
             break;
         case INCLUDES_CALL:
-            _output(indentationLevel, "includes(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
+            _output(0, "includes(");
+            _generateExpression(0, functionCall->expression);
+            _output(0, ")");
             break;
         case HEIGHT_CALL:
-            _output(indentationLevel, "height()");
+            _output(0, "height()");
             break;
         case DEPTH_CALL:
-            _output(indentationLevel, "depth(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
+            _output(0, "depth(");
+            _generateExpression(0, functionCall->expression);
+            _output(0, ")");
             break;
         case CALCULATE_CALL:
-            _output(indentationLevel, "calculate(");
-            _generateExpression(indentationLevel, functionCall->expression);
-            _output(indentationLevel, ")");
+            _output(0, "calculate(");
+            _generateExpression(0, functionCall->expression);
+            _output(0, ")");
             break;
         case VISUALIZE_CALL:
-            _output(indentationLevel, "visualize()");
+            _output(0, "visualize()");
             break;
         case ADD_CALL:
             _output(indentationLevel, "add(");
@@ -378,7 +380,9 @@ static void _generateFunctionCall(const unsigned int indentationLevel, FunctionC
         default:
             logError(_logger, "Unknown function call type: %d", functionCall->type);
             break;
-	}}
+	}
+    _output(0, ";\n");
+}
 
 // /* MODULE INTERNAL STATE */
 
