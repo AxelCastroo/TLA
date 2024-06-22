@@ -335,9 +335,21 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 		.varname = varName
 	};
 
-	if(!symbolTableFind(&key, NULL)){
+	struct value value;
+
+	if(!symbolTableFind(&key, &value)){
 		logError(_logger, "Variable %s undeclared", varName);
 		exit(1);
+	}
+
+	if (value.type != RBT_VAR && value.type != AVL_VAR && value.type != BST_VAR && value.type != EXP_VAR) {
+        logError(_logger, "Variable %s is not a tree type", varName);
+        exit(1);
+    } else {
+		if (value.type == EXP_VAR && type != CALCULATE_CALL){
+			logError(_logger, "Variable %s is not a tree type", varName);
+        	exit(1);
+		}
 	}
 
 	FunctionCall * new = malloc(sizeof(FunctionCall));
@@ -355,10 +367,17 @@ IterateStatement *IterateSemanticAction(char *varName, IteratorType type) {
 		.varname = varName
 	};
 
-	if(!symbolTableFind(&key, NULL)){
+	struct value value;
+
+	if(!symbolTableFind(&key, &value)){
 		logError(_logger, "Variable %s undeclared", varName);
 		exit(1);
 	}
+
+	if (value.type != RBT_VAR && value.type != AVL_VAR && value.type != BST_VAR) {
+        logError(_logger, "Variable %s is not a tree type", varName);
+        exit(1);
+    }
 
 	if(type != INORDER && type != POSTORDER && type != PREORDER){
 		logError(_logger, "Invalid order type");
