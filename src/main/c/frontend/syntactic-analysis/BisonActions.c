@@ -238,7 +238,7 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 		exit(1);
 	}
 
-	if(value.type != INT_VAR && value.type != BOOL_VAR && value.type != EXP_VAR){
+	if(value.type != INT_VAR && value.type != BOOL_VAR && value.type != EXP_VAR && value.type != AVL_VAR){
 		logError(_logger, "Variable %s is not an integer or boolean data type", varName);
 		exit(1);
 	}
@@ -249,13 +249,14 @@ Assignment *AssignmentSemanticAction(char *varName, Expression *expression, Func
 	}
 
 	//muere aca
-	if(expression != NULL && getExpressionType(expression) != value.type && value.type != EXP_VAR){
+	if(expression != NULL && getExpressionType(expression) != value.type && value.type != EXP_VAR && value.type != AVL_VAR){
 		logError(_logger, "Expression cannot be assigned to %s", varName);
 		exit(1);
 	}
 
-	value.metadata.hasValue = true;
+	value.metadata.hasValue = true;													// no esta funcionando creo
 	symbolTableInsert(&key, &value);
+	value.metadata.hasValue = true;
 
 	Assignment * new = malloc(sizeof(Assignment));
 	new->varName = varName;
@@ -354,6 +355,11 @@ FunctionCall *FunctionCallSemanticAction(char *varName, Expression *expression, 
 			logError(_logger, "Variable %s is not an expression tree type", varName);
         	exit(1);
 		}
+
+		// if(value.metadata.hasValue == false && type != BST_VAR && type != ){
+		// 	logError(_logger, "Variable %s has no value", varName);
+		// 	exit(1);
+		// }
 	}
 
 	FunctionCall * new = malloc(sizeof(FunctionCall));
@@ -522,21 +528,12 @@ static void AddUsedSymbol(char *varname, VarType expectedType){
 }
 
 static void validateUsedSymbols() {
+	int found = 0;
     for (int i = 0; i < usedSymbolsCount; i++) {
         struct key key = usedSymbols[i];
         struct value value;
         if (!symbolTableFind(&key, &value)) {
             logError(_logger, "Variable %s undeclared", key.varname);
-            exit(1);
-        }
-
-        if (value.metadata.hasValue == false) {
-            logError(_logger, "Variable %s has no value", key.varname);
-            exit(1);
-        }
-
-        if (value.type != usedSymbolsExpectedType[i]) {
-            logError(_logger, "Variable %s is not of type %d", key.varname, usedSymbolsExpectedType[i]);
             exit(1);
         }
     }

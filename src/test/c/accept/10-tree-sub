@@ -3,4 +3,5 @@ tree1 insert 2
 tree1 insert 3
 AVLTree tree2
 tree2 insert 2
-AVLTree tree3 = tree1 - tree2
+AVLTree tree3
+tree3 = tree1 - tree2

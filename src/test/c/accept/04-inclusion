@@ -1,11 +1,2 @@
 BSTree tree
 tree insert 44
-Boolean ans = tree includes 343
-
-RBTree tree2
-tree2 insert 34
-Boolean ans2 = tree2 includes 909
-
-AVLTree tree3
-tree3 insert 912
-Boolean ans3 = tree3 includes 18
